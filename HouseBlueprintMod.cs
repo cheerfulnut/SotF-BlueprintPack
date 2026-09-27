@@ -1,6 +1,7 @@
 using RedLoader;
 using Sons.Crafting.Structures;
 using SonsSdk;
+using SonsSdk.Attributes;
 
 namespace HouseBlueprint;
 
@@ -16,6 +17,10 @@ public class HouseBlueprintMod : SonsMod
     {
         HarmonyPatchAll = true;
     }
+
+    /// <summary>F1 console: removes a finished building (see StructureRemover).</summary>
+    [DebugCommand("hb_remove")]
+    private static void RemoveCommand(string args) => StructureRemover.Command(args);
 
     protected override void OnGameStart()
     {
