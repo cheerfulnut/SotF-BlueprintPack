@@ -30,13 +30,28 @@ PARTS = {
     "StoneWall": ("Stone wall, 5 rows of 4 stones", {"Stone": 20}),
     "Door": ("Plank door, 1.1 m wide", {"Plank": 1}),
     "PlankPlatform": ("Plank floor on 4 log beams, about 2.3 m square", {"Log": 4, "Plank": 5}),
+    # Tower parts, copied from the game's LookOut Tower. Their origin is the game's own pivot, not the ground:
+    "Beam": ("Log beam spanning 2.26 m; origin at the log's centre", {"Log": 1}),
+    "Floor": ("Floor of 5 planks, 2.26 m square; origin at the planks' centre, 0.163 m above the beams' centre",
+              {"Plank": 5}),
+    "HatchFloor": ("Floor with a hole and a climbing rope hanging down through it; origin as Floor",
+                   {"Plank": 5, "Rope": 1}),
+    "Parapet": ("Log railing, 3 logs high; origin on the ground like the walls", {"Log": 3}),
+    "Rope": ("Climbing rope; origin at its top, it hangs down to the ground", {"Rope": 1}),
 }
+
+# Vertical layout the game's LookOut Tower uses: each storey has a ring of beams, walls stand on the beams.
+STOREY = 2.70           # beam ring to beam ring
+BEAM_TO_WALL = 0.225    # a wall's ground-contact point sits this far above the beams' centre (on top of the logs)
+BEAM_TO_FLOOR = 0.163   # floor planks' centre above the beams' centre
+ROPE_LENGTH = 10.0      # only for the picture; in the game the rope reaches the ground
 
 COLOURS = {
     "Log": (0.13, 0.065, 0.028, 1.0),
     "LogEnd": (0.42, 0.28, 0.14, 1.0),
     "Plank": (0.22, 0.13, 0.06, 1.0),
     "Stone": (0.22, 0.215, 0.205, 1.0),
+    "Rope": (0.35, 0.29, 0.18, 1.0),
 }
 
 
@@ -139,6 +154,35 @@ def build_mesh(part):
             _box(bm, -0.905 + 0.4525 * k, 0, 0.2 + 2 * LOG_R + 0.06, 0.428, 2 * half + 0.1, 0.12)
         return _finish(part, bm, "Plank")
 
+    if part == "Beam":
+        _cylinder_y(bm, 0, 0, 0, 2.53, LOG_R * 0.95)
+        return _finish(part, bm, "Log")
+
+    if part in ("Floor", "HatchFloor"):
+        for k in range(5):
+            if part == "HatchFloor" and k in (1, 2):  # two planks with a hole: leave a gap for the picture
+                for side in (-1, 1):
+                    _box(bm, -0.905 + 0.4525 * k, side * 0.8, 0, 0.428, 0.66, 0.225)
+            else:
+                _box(bm, -0.905 + 0.4525 * k, 0, 0, 0.428, 2.29, 0.225)
+        if part == "HatchFloor":
+            geom = bmesh.ops.create_cone(bm, cap_ends=True, segments=8, radius1=0.03, radius2=0.03, depth=STOREY)
+            bmesh.ops.translate(bm, verts=geom["verts"], vec=(-0.68, 0, -STOREY / 2))
+            mesh = _finish(part, bm, "Plank")
+            mesh.materials.append(material("Rope"))
+            return mesh
+        return _finish(part, bm, "Plank")
+
+    if part == "Parapet":
+        for i in range(3):
+            _cylinder_y(bm, 0, 0, LOG_R + ROW * i, LOG_LEN, LOG_R)
+        return _finish(part, bm, "Log")
+
+    if part == "Rope":
+        geom = bmesh.ops.create_cone(bm, cap_ends=True, segments=8, radius1=0.035, radius2=0.035, depth=ROPE_LENGTH)
+        bmesh.ops.translate(bm, verts=geom["verts"], vec=(0, 0, -ROPE_LENGTH / 2))
+        return _finish(part, bm, "Rope")
+
     raise ValueError(f"Unknown part type {part}")
 
 
@@ -155,4 +199,8 @@ def icon_mesh(item):
         verts = _box(bm, 0, 0, 0, 0.44, 0.6, 0.4)
         bmesh.ops.bevel(bm, geom=bm.edges[:], offset=0.08, segments=3, affect="EDGES")
         return _finish("Icon" + item, bm, "Stone")
+    if item == "Rope":
+        geom = bmesh.ops.create_cone(bm, cap_ends=True, segments=12, radius1=0.5, radius2=0.5, depth=0.25)
+        bmesh.ops.delete(bm, geom=[f for f in bm.faces if abs(f.normal.z) > 0.9], context="FACES")
+        return _finish("Icon" + item, bm, "Rope")
     raise ValueError(f"Unknown item {item}")

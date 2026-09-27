@@ -27,7 +27,7 @@ ICON_X, ICON_SIZE, ROW_SPACING = 372, 70, 80
 PREVIOUS_BUTTON = (72, 923, 369, 1002)
 NEXT_BUTTON = (378, 923, 674, 1002)
 
-ITEM_ORDER = ["Log", "QuarterLog", "Plank", "Stone"]
+ITEM_ORDER = ["Log", "QuarterLog", "Plank", "Stone", "Rope"]
 
 
 def font(size):
