@@ -1,0 +1,9 @@
+{
+  "id": "HouseBlueprint",
+  "name": "House Blueprint",
+  "author": "cheerfulnut",
+  "version": "0.1.0",
+  "description": "Adds a custom house to the blueprint book, built from the game's own logs and stones.",
+  "type": "Mod",
+  "gameVersion": "2.0.0"
+}
