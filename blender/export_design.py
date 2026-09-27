@@ -1,4 +1,7 @@
-"""Exports a design file's "Design" collection as a blueprint layout, and renders the pictures for its book page.
+"""Exports a design file's parts as a blueprint layout, and renders the pictures for its book page.
+
+Every object with a part type is exported except those in the kit column on the left (see hb_parts.KIT_LIMIT_X),
+whichever collection it is in. Turns within 2 degrees of a right angle are straightened.
 
     blender --background <design.blend> --python blender/export_design.py -- <recipe id> <output base path>
 
@@ -24,16 +27,15 @@ recipe_id, base = int(args[0]), os.path.abspath(args[1])
 os.makedirs(os.path.dirname(base), exist_ok=True)
 
 scene = bpy.context.scene
-design = bpy.data.collections.get("Design")
-if design is None:
-    raise SystemExit("No 'Design' collection in this file")
+design_objects = [o for o in scene.objects
+                  if o.get("hb_part") is not None and o.matrix_world.translation.x >= hb_parts.KIT_LIMIT_X]
+if not design_objects:
+    raise SystemExit("No parts outside the kit column")
 
 # --- Layout -----------------------------------------------------------------------------------------------------
 parts, totals, problems = [], {}, []
-for obj in sorted(design.all_objects, key=lambda o: o.name):
+for obj in sorted(design_objects, key=lambda o: o.name):
     part = obj.get("hb_part")
-    if part is None:
-        continue
     if part not in hb_parts.PARTS:
         problems.append(f"{obj.name}: unknown part type {part}")
         continue
@@ -43,11 +45,15 @@ for obj in sorted(design.all_objects, key=lambda o: o.name):
     if any(abs(s - 1.0) > 1e-3 for s in obj.matrix_world.to_scale()):
         problems.append(f"{obj.name}: scaled; parts always have their real size in the game")
     x, y, z = obj.matrix_world.translation
+    yaw = -math.degrees(rz) % 360.0
+    right_angle = round(yaw / 90.0) * 90.0
+    if abs(yaw - right_angle) <= 2.0:
+        yaw = right_angle % 360.0
     parts.append({
         "name": obj.name,
         "type": part,
         "position": [round(x, 3), round(z, 3), round(y, 3)],
-        "yaw": round(-math.degrees(rz), 2) % 360.0,
+        "yaw": round(yaw, 2),
     })
     for item, count in hb_parts.PARTS[part][1].items():
         totals[item] = totals.get(item, 0) + count
@@ -68,9 +74,9 @@ for p in problems:
     print("HB WARNING: " + p)
 
 # --- Pictures ---------------------------------------------------------------------------------------------------
-kit = bpy.data.collections.get("Kit")
-if kit:
-    kit.hide_render = True
+for obj in scene.objects:  # the kit column and its labels stay out of the pictures
+    if obj.matrix_world.translation.x < hb_parts.KIT_LIMIT_X:
+        obj.hide_render = True
 
 scene.render.engine = "CYCLES"
 scene.cycles.device = "CPU"
@@ -109,7 +115,7 @@ def aim(target, direction, distance):
 
 
 # Main render: three-quarter view from the front left and above, with a soft shadow on an invisible ground.
-corners = [o.matrix_world @ Vector(c) for o in design.all_objects if o.type == "MESH" for c in o.bound_box]
+corners = [o.matrix_world @ Vector(c) for o in design_objects if o.type == "MESH" for c in o.bound_box]
 lo = Vector((min(c.x for c in corners), min(c.y for c in corners), min(c.z for c in corners)))
 hi = Vector((max(c.x for c in corners), max(c.y for c in corners), max(c.z for c in corners)))
 centre, radius = (lo + hi) / 2, (hi - lo).length / 2
@@ -130,7 +136,8 @@ print(f"HB: rendered {scene.render.filepath}")
 
 # Icons: each ingredient on its own, seen from the same side, no shadow.
 ground.hide_render = True
-design.hide_render = True
+for obj in design_objects:
+    obj.hide_render = True
 cam_data.type = "ORTHO"
 scene.render.resolution_x = scene.render.resolution_y = 160
 for item in totals:

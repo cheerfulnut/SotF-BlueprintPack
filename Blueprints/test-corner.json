@@ -1,0 +1,124 @@
+{
+  "id": 9002,
+  "name": "Test Corner",
+  "category": "Shelters",
+  "page": "test-corner-page.png",
+  "ingredients": {
+    "Plank": 7,
+    "Log": 14,
+    "QuarterLog": 20,
+    "Stone": 40
+  },
+  "parts": [
+    {
+      "name": "Door",
+      "type": "Door",
+      "position": [
+        2.825,
+        0.0,
+        1.13
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Kit Door.001",
+      "type": "Door",
+      "position": [
+        2.825,
+        0.0,
+        -5.65
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Kit LogWall.002",
+      "type": "LogWall",
+      "position": [
+        2.26,
+        0.0,
+        -4.52
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Kit LogWindowWall.002",
+      "type": "LogWindowWall",
+      "position": [
+        3.39,
+        0.0,
+        0.0
+      ],
+      "yaw": 180.0
+    },
+    {
+      "name": "Kit LogWindowWall.003",
+      "type": "LogWindowWall",
+      "position": [
+        3.39,
+        0.0,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Kit LogWindowWall.004",
+      "type": "LogWindowWall",
+      "position": [
+        3.39,
+        0.0,
+        -4.52
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Kit StoneWall.001",
+      "type": "StoneWall",
+      "position": [
+        1.13,
+        0.0,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "LogWall",
+      "type": "LogWall",
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "LogWindowWall",
+      "type": "LogWindowWall",
+      "position": [
+        1.13,
+        0.0,
+        1.13
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "PlankPlatform",
+      "type": "PlankPlatform",
+      "position": [
+        1.695,
+        0.0,
+        -1.695
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "StoneWall",
+      "type": "StoneWall",
+      "position": [
+        0.0,
+        0.0,
+        -2.26
+      ],
+      "yaw": 0.0
+    }
+  ]
+}

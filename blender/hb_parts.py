@@ -13,6 +13,11 @@ import random
 import bmesh
 import bpy
 
+# The kit column sits at x = KIT_X; any part left of KIT_LIMIT_X is part of the kit (or a copy left on top of it)
+# and is not exported. Every other part is, whatever collection it is in.
+KIT_X = -8.0
+KIT_LIMIT_X = -5.0
+
 LOG_R = 0.225
 LOG_LEN = 2.53
 ROW = 0.45

@@ -3,8 +3,9 @@
     blender --background --factory-startup --python blender/make_kit.py -- <output.blend> <blueprint name> [--force]
 
 The file has two collections:
-  * "Kit": one of each part, off to the side. Copy parts from here with Alt+D (a linked copy).
-  * "Design": the layout that gets exported. Move and rotate parts here (rotate only around Z).
+  * "Kit": one of each part, in a column on the left. Copy parts from here with Shift+D.
+  * "Design": the starting layout.
+Every part outside the kit column is exported, whichever collection it is in; parts in the column are ignored.
 Parts can only move along the ground. Holding Ctrl snaps to a 0.565 m grid (half the 1.13 m spacing the game's walls
 use; walls meet every 2.26 m) and turns in 90 degree steps. The file opens looking straight down.
 Refuses to overwrite an existing file unless --force is given, so design work is never lost.
@@ -63,7 +64,7 @@ def add_label(collection, text, x, y):
 
 # Kit: one of each part in a row to the left of the design area, with a label in front of it.
 for i, part in enumerate(hb_parts.PARTS):
-    x = -8.0
+    x = hb_parts.KIT_X
     y = -6.0 + i * 3.5
     add_part(kit, part, x, y, 90.0 if part != "PlankPlatform" else 0.0, name="Kit " + part)
     add_label(kit, part, x, y - 1.6)
