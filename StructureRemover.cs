@@ -16,7 +16,8 @@ namespace HouseBlueprint;
 ///       hb_remove confirm    remove what the last hb_remove found (within 30 seconds)
 ///       hb_remove cancel     forget it
 ///     It only ever reports first; nothing is removed without "confirm". Structures are removed top first through the
-///     game's own debug destroy (StructureDestructionManager.DestroyStructureDebug), not deleted directly.
+///     game's structure database (RuntimeStructureDatabase.DestroyStructure), not deleted directly. (The game's
+///     StructureDestructionManager.DestroyStructureDebug reported success without removing anything.)
 ///     Unfinished blueprint ghosts are not structures; RedLoader's cancelblueprints removes those.
 /// </summary>
 internal static class StructureRemover
@@ -28,8 +29,6 @@ internal static class StructureRemover
     private static List<Structure> _pending;
     private static float _pendingSince;
 
-    // Removal takes a moment (pieces break or fall), so a scan soon after would find them again; skip those.
-    private static readonly HashSet<IntPtr> Removed = new();
 
     public static void Command(string args)
     {
@@ -85,12 +84,6 @@ internal static class StructureRemover
             return;
         }
 
-        if (!StructureDestructionManager.TryGetInstance(out var manager))
-        {
-            Report("hb_remove: the game's structure destruction system is not available.");
-            return;
-        }
-
         var removed = 0;
         var failed = 0;
         // Top first, so nothing is left without support and collapses on the way.
@@ -98,21 +91,21 @@ internal static class StructureRemover
         {
             if (structure == null)
                 continue; // already gone with something else
-            var name = $"HBRemove_{removed + failed}_{structure.GetInstanceID()}";
-            structure.gameObject.name = name; // the game's debug destroy finds structures by name
-            var pointer = structure.Pointer;
-            if (manager.DestroyStructureDebug(name))
+            try
             {
+                RuntimeStructureDatabase.DestroyStructure(structure);
                 removed++;
-                Removed.Add(pointer);
             }
-            else
+            catch (Exception e)
+            {
                 failed++;
+                RLog.Error($"[HouseBlueprint] hb_remove could not remove {structure.name}: {e.Message}");
+            }
         }
 
         _pending = null;
         RLog.Msg($"[HouseBlueprint] hb_remove removed {removed} structures, {failed} failed.");
-        Report(failed == 0 ? $"hb_remove: removed {removed} structures." : $"hb_remove: removed {removed}, {failed} failed (see the log).");
+        Report(failed == 0 ? $"hb_remove: asked the game to remove {removed} structures." : $"hb_remove: removed {removed}, {failed} failed (see the log).");
     }
 
     private static List<Structure> AllStructures()
@@ -121,7 +114,7 @@ internal static class StructureRemover
         foreach (var o in Object.FindObjectsOfType(Il2CppType.Of<Structure>()))
         {
             var s = o.TryCast<Structure>();
-            if (s != null && s.gameObject.activeInHierarchy && !Removed.Contains(s.Pointer))
+            if (s != null && s.gameObject.activeInHierarchy)
                 list.Add(s);
         }
 
@@ -156,7 +149,7 @@ internal static class StructureRemover
                 break;
         }
 
-        if (target == null || Removed.Contains(target.Pointer))
+        if (target == null)
             return null;
 
         // Everything touching the target, then everything touching those, and so on.
