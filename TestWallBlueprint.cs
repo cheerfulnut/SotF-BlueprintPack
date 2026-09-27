@@ -34,6 +34,12 @@ internal static class TestWallBlueprint
     private static GameObject _prefabHolder;
     private static StructureRecipe _recipe;
 
+    public static bool TryGetName(StructureRecipe recipe, out string name)
+    {
+        name = recipe != null && _recipe != null && recipe._id == RecipeId ? DisplayName : null;
+        return name != null;
+    }
+
     /// <summary>
     ///     Creates the recipe and its ghost once, and makes sure the given recipe database contains it. Safe to call
     ///     repeatedly; it must run before the game restores saved ghosts, which look recipes up by id.

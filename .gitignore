@@ -6,3 +6,4 @@ obj/
 .nuget-local/
 save-backups/
 page-export/
+build/

@@ -10,7 +10,7 @@ public class HouseBlueprintMod : SonsMod
     private static readonly bool RunDiagnostics = false;
 
     // Set to true to save a few blueprint book page images to Mods\HouseBlueprint\page-export (local reference only).
-    private static readonly bool ExportPages = true;
+    private static readonly bool ExportPages = false;
 
     public HouseBlueprintMod()
     {
@@ -23,8 +23,13 @@ public class HouseBlueprintMod : SonsMod
         {
             // The patches normally registered the recipe already; this is a fallback if they did not run.
             if (StructureCraftingSystem.TryGetInstance(out var system))
+            {
                 TestWallBlueprint.EnsureRegistered(system._recipeDatabase);
+                LayoutBlueprints.EnsureRegistered(system._recipeDatabase);
+            }
+
             TestWallBlueprint.EnsureBookPage();
+            LayoutBlueprints.EnsureBookPages();
         }
         catch (Exception e)
         {
