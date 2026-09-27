@@ -28,7 +28,7 @@ internal static class PartLibrary
 
     // Ramps: the game's roofs slope at this angle, so two floor tiles of run rise exactly one storey (2.70 m).
     private const float RampAngle = 30.852f;
-    private const int RampPlanks = 12;
+    private const int RampPlanks = 11;
     private const float RampPlankSpacing = 0.45f;
     private const ushort PlankProfile = 6;
     private const int PlankItem = 395;
@@ -89,7 +89,7 @@ internal static class PartLibrary
                 return PlaceSingle(FindNamed(db, LookOutTower, "Preset2"), ghostRoot, position, r) != null;
             case "Ramp":
             {
-                // The Medium Cabin's roof ramp, rebuilt as 12 planks and tilted to the game's roof angle.
+                // The Medium Cabin's roof ramp, rebuilt as 11 planks and tilted to the game's roof angle.
                 var ramp = PlaceSingle(FindNamed(db, MediumCabin, "Ramp1"), ghostRoot, position,
                                        r * Quaternion.Euler(0f, 0f, RampAngle));
                 return ramp != null && RebuildRampPlanks(ramp);

@@ -49,12 +49,12 @@ PARTS = {
                 {"Log": 2, "HalfLog": 2, "Plank": 5}),
     "StoneFloor": ("Floor tile of 5 flat stones instead of planks; origin as Floor", {"Stone": 5}),
     "CornerPost": ("Upright log post, 2.7 m tall; origin at its foot", {"Log": 1}),
-    "Ramp": ("Walkable ramp of 12 planks, 2.29 m wide, rising 2.54 m over 4.25 m along local +X at the game's roof "
-             "angle (30.85 degrees); origin at the centre of its lowest plank", {"Plank": 12}),
+    "Ramp": ("Walkable ramp of 11 planks, 2.29 m wide, rising 2.31 m over 3.86 m along local +X at the game's roof "
+             "angle (30.85 degrees); origin at the centre of its lowest plank", {"Plank": 11}),
 }
 
 RAMP_ANGLE = 30.852  # degrees; the game's roofs. Two floor tiles (4.52 m) of run rise one storey (2.70 m)
-RAMP_PLANKS = 12
+RAMP_PLANKS = 11
 RAMP_SPACING = 0.45  # along the slope
 
 # Vertical layout the game's LookOut Tower uses: each storey has a ring of beams, walls stand on the beams.

@@ -6,7 +6,7 @@
   "ingredients": {
     "Log": 276,
     "Rope": 2,
-    "Plank": 92,
+    "Plank": 91,
     "HalfLog": 2,
     "QuarterLog": 8,
     "Stone": 245
@@ -796,9 +796,9 @@
       "name": "Floor.009",
       "type": "Floor",
       "position": [
-        -2.26,
+        0.0,
         10.738,
-        0.0
+        -2.26
       ],
       "yaw": 0.0
     },
@@ -808,7 +808,7 @@
       "position": [
         0.0,
         10.738,
-        -2.26
+        0.0
       ],
       "yaw": 0.0
     },
@@ -818,7 +818,7 @@
       "position": [
         0.0,
         10.738,
-        0.0
+        2.26
       ],
       "yaw": 0.0
     },
@@ -838,7 +838,7 @@
       "position": [
         2.26,
         10.738,
-        2.26
+        0.0
       ],
       "yaw": 0.0
     },
@@ -1106,16 +1106,6 @@
       "name": "LogWall.024",
       "type": "LogWall",
       "position": [
-        -3.39,
-        8.1,
-        -2.26
-      ],
-      "yaw": 0.0
-    },
-    {
-      "name": "LogWall.025",
-      "type": "LogWall",
-      "position": [
         -2.26,
         8.1,
         3.39
@@ -1123,7 +1113,7 @@
       "yaw": 270.0
     },
     {
-      "name": "LogWall.026",
+      "name": "LogWall.025",
       "type": "LogWall",
       "position": [
         3.39,
@@ -1133,7 +1123,7 @@
       "yaw": 0.0
     },
     {
-      "name": "LogWall.027",
+      "name": "LogWall.026",
       "type": "LogWall",
       "position": [
         0.0,
@@ -1143,17 +1133,17 @@
       "yaw": 270.0
     },
     {
-      "name": "LogWall.028",
+      "name": "LogWall.027",
       "type": "LogWall",
       "position": [
-        0.0,
+        -3.39,
         8.1,
-        3.39
+        0.0
       ],
-      "yaw": 270.0
+      "yaw": 0.0
     },
     {
-      "name": "LogWall.029",
+      "name": "LogWall.028",
       "type": "LogWall",
       "position": [
         2.26,
@@ -1163,7 +1153,7 @@
       "yaw": 270.0
     },
     {
-      "name": "LogWall.030",
+      "name": "LogWall.029",
       "type": "LogWall",
       "position": [
         -3.39,
@@ -1171,6 +1161,16 @@
         2.26
       ],
       "yaw": 0.0
+    },
+    {
+      "name": "LogWall.030",
+      "type": "LogWall",
+      "position": [
+        2.26,
+        8.1,
+        3.39
+      ],
+      "yaw": 270.0
     },
     {
       "name": "LogWall.031",
@@ -1198,12 +1198,22 @@
       "position": [
         -3.39,
         8.1,
-        0.0
+        -2.26
       ],
       "yaw": 0.0
     },
     {
       "name": "LogWindowWall.002",
+      "type": "LogWindowWall",
+      "position": [
+        0.0,
+        8.1,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "LogWindowWall.003",
       "type": "LogWindowWall",
       "position": [
         3.39,
@@ -1213,34 +1223,24 @@
       "yaw": 0.0
     },
     {
-      "name": "LogWindowWall.003",
-      "type": "LogWindowWall",
-      "position": [
-        2.26,
-        8.1,
-        3.39
-      ],
-      "yaw": 270.0
-    },
-    {
-      "name": "Opening rail",
+      "name": "Opening rail front",
       "type": "Rail",
       "position": [
         -2.26,
         10.8,
-        1.13
+        -1.13
       ],
       "yaw": 270.0
     },
     {
-      "name": "Opening rail.001",
+      "name": "Opening rail side",
       "type": "Rail",
       "position": [
-        0.0,
+        -1.13,
         10.8,
-        1.13
+        0.0
       ],
-      "yaw": 270.0
+      "yaw": 0.0
     },
     {
       "name": "Parapet",
@@ -1376,11 +1376,11 @@
       "name": "Ramp",
       "type": "Ramp",
       "position": [
-        -3.22,
+        -2.26,
         8.263,
-        2.26
+        -0.85
       ],
-      "yaw": 0.0
+      "yaw": 270.0
     },
     {
       "name": "StoneFloor",
@@ -1388,7 +1388,7 @@
       "position": [
         2.26,
         10.738,
-        0.0
+        2.26
       ],
       "yaw": 0.0
     },
