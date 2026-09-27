@@ -195,9 +195,11 @@ def build_mesh(part):
         return _finish(part, bm, "Log")
 
     if part == "Balcony":
-        for side in (-1, 1):  # beams sticking out, and braces from the wall down under them
-            _cylinder_x(bm, -1.13, side * 1.13, 0, 2.26, LOG_R * 0.95)
-            _cylinder_x(bm, -0.5, side * 1.13, -0.55, 1.35, LOG_R * 0.8, tilt=-0.785)
+        for side in (-1, 1):
+            _cylinder_x(bm, -1.13, side * 1.13, 0, 2.26, LOG_R * 0.95)  # beam sticking out from the wall
+            # Brace, as in the game's LookOut Tower: a 1.4 m half log starting on the wall 0.86 m below the beam and
+            # rising outwards at 45 degrees to meet the beam's underside about 1 m out.
+            _cylinder_x(bm, -0.495, side * 1.13, -0.858 + 0.495, 1.4, LOG_R * 0.8, tilt=0.785)
         for k in range(5):
             _box(bm, -1.13, -0.905 + 0.4525 * k, BEAM_TO_FLOOR, 2.29, 0.428, 0.225)
         return _finish(part, bm, "Plank")
