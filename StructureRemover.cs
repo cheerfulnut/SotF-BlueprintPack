@@ -5,16 +5,16 @@ using SonsSdk;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace HouseBlueprint;
+namespace BlueprintPack;
 
 /// <summary>
-///     The hb_remove console command (F1): removes a finished building, for clearing test builds.
-///       hb_remove            the building you are looking at: the piece you aim at and every structure touching it,
+///     The bp_remove console command (F1): removes a finished building, for clearing test builds.
+///       bp_remove            the building you are looking at: the piece you aim at and every structure touching it,
 ///                            and everything touching those, and so on (the game's own building grouping does not
 ///                            join up the pieces of a tower finished from a blueprint)
-///       hb_remove 15         every structure within 15 m of you
-///       hb_remove confirm    remove what the last hb_remove found (within 30 seconds)
-///       hb_remove cancel     forget it
+///       bp_remove 15         every structure within 15 m of you
+///       bp_remove confirm    remove what the last bp_remove found (within 30 seconds)
+///       bp_remove cancel     forget it
 ///     It only ever reports first; nothing is removed without "confirm". Structures are removed top first through the
 ///     game's structure database (RuntimeStructureDatabase.DestroyStructure), not deleted directly. (The game's
 ///     StructureDestructionManager.DestroyStructureDebug reported success without removing anything.)
@@ -53,19 +53,19 @@ internal static class StructureRemover
             else if (args == "cancel")
             {
                 _pending = null;
-                Report("hb_remove: cancelled.");
+                Report("bp_remove: cancelled.");
             }
             else if (float.TryParse(args, out var radius) && radius > 0)
                 Preview(InRadius(radius), $"within {radius:0.#} m of you");
             else if (args.Length == 0)
                 Preview(LookedAtBuilding(), "in the building you are looking at");
             else
-                Report("hb_remove: use 'hb_remove' (look at a building), 'hb_remove <metres>', 'hb_remove confirm' or 'hb_remove cancel'.");
+                Report("bp_remove: use 'bp_remove' (look at a building), 'bp_remove <metres>', 'bp_remove confirm' or 'bp_remove cancel'.");
         }
         catch (Exception e)
         {
-            RLog.Error($"[HouseBlueprint] hb_remove failed: {e}");
-            Report("hb_remove failed; see the log.");
+            RLog.Error($"[BlueprintPack] bp_remove failed: {e}");
+            Report("bp_remove failed; see the log.");
         }
     }
 
@@ -91,20 +91,20 @@ internal static class StructureRemover
         var skipped = all?.Where(s => !IsBuildingPart(s)).ToList() ?? new List<Structure>();
         var skippedNote = skipped.Count == 0 ? "" : $" Leaving alone: {Summary(skipped)}.";
         if (skipped.Count > 0)
-            RLog.Msg($"[HouseBlueprint] hb_remove skipped {skipped.Count} non-building structures {where}: {Summary(skipped)}");
+            RLog.Msg($"[BlueprintPack] bp_remove skipped {skipped.Count} non-building structures {where}: {Summary(skipped)}");
 
         if (found == null || found.Count == 0)
         {
             _pending = null;
-            Report($"hb_remove: no building parts {where}.{skippedNote}");
+            Report($"bp_remove: no building parts {where}.{skippedNote}");
             return;
         }
 
         _pending = found;
         _pendingSince = Time.realtimeSinceStartup;
         var summary = Summary(found);
-        RLog.Msg($"[HouseBlueprint] hb_remove found {found.Count} structures {where}: {summary}");
-        Report($"hb_remove: {found.Count} building parts {where} ({summary}).{skippedNote} Type 'hb_remove confirm' "
+        RLog.Msg($"[BlueprintPack] bp_remove found {found.Count} structures {where}: {summary}");
+        Report($"bp_remove: {found.Count} building parts {where} ({summary}).{skippedNote} Type 'bp_remove confirm' "
                + $"within {ConfirmSeconds:0} s to remove them.", 10f);
     }
 
@@ -113,7 +113,7 @@ internal static class StructureRemover
         if (_pending == null || Time.realtimeSinceStartup - _pendingSince > ConfirmSeconds)
         {
             _pending = null;
-            Report("hb_remove: nothing to confirm; run hb_remove first.");
+            Report("bp_remove: nothing to confirm; run bp_remove first.");
             return;
         }
 
@@ -132,13 +132,13 @@ internal static class StructureRemover
             catch (Exception e)
             {
                 failed++;
-                RLog.Error($"[HouseBlueprint] hb_remove could not remove {structure.name}: {e.Message}");
+                RLog.Error($"[BlueprintPack] bp_remove could not remove {structure.name}: {e.Message}");
             }
         }
 
         _pending = null;
-        RLog.Msg($"[HouseBlueprint] hb_remove removed {removed} structures, {failed} failed.");
-        Report(failed == 0 ? $"hb_remove: asked the game to remove {removed} structures." : $"hb_remove: removed {removed}, {failed} failed (see the log).");
+        RLog.Msg($"[BlueprintPack] bp_remove removed {removed} structures, {failed} failed.");
+        Report(failed == 0 ? $"bp_remove: asked the game to remove {removed} structures." : $"bp_remove: removed {removed}, {failed} failed (see the log).");
     }
 
     private static List<Structure> AllStructures()
@@ -231,6 +231,6 @@ internal static class StructureRemover
     private static void Report(string text, float seconds = 4f)
     {
         SonsTools.ShowMessage(text, seconds);
-        RLog.Msg("[HouseBlueprint] " + text);
+        RLog.Msg("[BlueprintPack] " + text);
     }
 }

@@ -1,7 +1,7 @@
 {
   "id": 9003,
-  "name": "Stone Tower",
-  "category": "Shelters",
+  "name": "Stone Tower (5 levels)",
+  "section": "Shelter",
   "page": "stone-tower-page.png",
   "ingredients": {
     "Log": 275,

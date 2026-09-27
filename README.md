@@ -1,4 +1,4 @@
-# House Blueprint
+# Blueprint Pack
 
 A [RedLoader](https://github.com/enderfish/RedLoader) mod for **Sons of the Forest** that adds new buildings to the
 blueprint book. You place them and build them the normal way: put down the ghost, carry the materials to it, and
@@ -6,7 +6,7 @@ it turns into an ordinary building made of the game's own logs, planks and stone
 
 ## Buildings
 
-### Stone Tower (Shelter pages)
+### Stone Tower (5 levels) - Shelter section
 
 A five-level watchtower, about 12 m tall, on a 6.8 m square footprint:
 
@@ -29,17 +29,18 @@ A launch platform sticks out from the front of the deck (for hang gliding), with
 
 ## Installing
 
-1. Download `HouseBlueprint-<version>.zip` from this repository's releases.
+1. Download `BlueprintPack-<version>.zip` from this repository's releases.
 2. Extract it into the game folder (the one with `SonsOfTheForest.exe`). It contains:
    ```
-   Mods\HouseBlueprint.dll
-   Mods\HouseBlueprint\manifest.json
-   Mods\HouseBlueprint\Blueprints\stone-tower.json
-   Mods\HouseBlueprint\Blueprints\stone-tower-page.png
+   Mods\BlueprintPack.dll
+   Mods\BlueprintPack\manifest.json
+   Mods\BlueprintPack\Blueprints\stone-tower.json
+   Mods\BlueprintPack\Blueprints\stone-tower-page.png
    ```
-3. Start the game. The new page is in the blueprint book, after the game's own Shelter pages.
+3. Start the game. Each new building's page is at the end of its section in the blueprint book (the Stone Tower is
+   after the game's own Shelter pages).
 
-To uninstall, delete `Mods\HouseBlueprint.dll` and the `Mods\HouseBlueprint` folder.
+To uninstall, delete `Mods\BlueprintPack.dll` and the `Mods\BlueprintPack` folder.
 
 ## Good to know
 
@@ -55,14 +56,14 @@ To uninstall, delete `Mods\HouseBlueprint.dll` and the `Mods\HouseBlueprint` fol
 
 ## Console command for testing
 
-`hb_remove` (in the game's console, opened with F1) removes a finished building, for clearing test builds:
+`bp_remove` (in the game's console, opened with F1) removes a finished building, for clearing test builds:
 
 | Type | What happens |
 |---|---|
-| `hb_remove` | Look at a building first. Reports what it would remove; nothing happens yet. |
-| `hb_remove 15` | Reports the building parts within 15 m of you instead. |
-| `hb_remove confirm` | Removes what the last report found (within 30 seconds). |
-| `hb_remove cancel` | Forgets the report. |
+| `bp_remove` | Look at a building first. Reports what it would remove; nothing happens yet. |
+| `bp_remove 15` | Reports the building parts within 15 m of you instead. |
+| `bp_remove confirm` | Removes what the last report found (within 30 seconds). |
+| `bp_remove cancel` | Forgets the report. |
 
 It only removes building parts (walls, beams, floors, posts, ramps, stairs, doors, climbing ropes) and leaves tarps,
 beds, fires, storage, traps and defensive walls alone. It removes *any* building parts it reaches, including ones you
@@ -77,13 +78,17 @@ builds the ghost from the game's own pieces. See [docs/BUILDING-GUIDE.md](docs/B
 
 Needs the .NET 10 SDK (see `global.json`), and RedLoader installed in the game with the game run once (the project
 builds against the game code RedLoader generates). If your game is not in Steam's default folder, create
-`GamePath.user.props` next to `HouseBlueprint.csproj`:
+`GamePath.user.props` next to `BlueprintPack.csproj`:
 
 ```xml
 <Project><PropertyGroup><GamePath>D:\Games\Steam\steamapps\common\Sons Of The Forest</GamePath></PropertyGroup></Project>
 ```
 
 Then `dotnet build -c Release -t:Package` builds the mod and writes the release zip to `dist\`.
+
+## Licence
+
+MIT; see [LICENSE](LICENSE).
 
 ## Credits
 

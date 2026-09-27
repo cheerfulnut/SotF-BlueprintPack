@@ -15,12 +15,14 @@ GRID = 1.13
 
 
 class Design:
-    def __init__(self, blueprint_name):
+    def __init__(self, blueprint_name, section="Shelter"):
+        """section: the blueprint book section the page goes in (see make_page.SECTIONS)."""
         bpy.ops.wm.read_factory_settings(use_empty=True)
         self.scene = bpy.context.scene
         self.scene.unit_settings.system = "METRIC"
         self.scene.unit_settings.length_unit = "METERS"
         self.scene["hb_blueprint_name"] = blueprint_name
+        self.scene["hb_section"] = section
         self.kit = bpy.data.collections.new("Kit")
         self.design = bpy.data.collections.new("Design")
         self.scene.collection.children.link(self.kit)

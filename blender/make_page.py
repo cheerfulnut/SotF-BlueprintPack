@@ -17,9 +17,14 @@ from PIL import Image, ImageDraw, ImageFont
 BACKGROUND = "#d8c6b7"
 SLOT = "#c3b3a5"
 COUNT_TEXT = "#5b4e44"
-CATEGORY = {"Shelters": "#708649"}
-# The bottom bars name the previous and next categories; our pages sit between Shelter and Tree Shelter.
-PREVIOUS_BAR, NEXT_BAR = "#708649", "#b47f41"
+# The book's sections in order, with the colour of their header and tab (measured from the game's pages). A page's
+# bottom bars show the previous page's section and the next page's; our pages go at the end of their section, so they
+# get their own colour on the left and the next section's on the right.
+SECTIONS = [
+    ("Shelter", "#708649"), ("TreeShelter", "#b47f41"), ("Platform", "#9f5555"), ("DefensiveWalls", "#9f5555"),
+    ("Furniture", "#7d6b87"), ("Storage", "#7c6656"), ("Utility", "#6f9291"), ("Traps", "#aa5e76"),
+    ("Rafts", "#607891"), ("Notes", "#838383"),
+]
 
 HEADER = (0, 0, 671, 124)
 TOP_SLOT = (88, 210, 345, 496)
@@ -65,10 +70,14 @@ def main():
 
     page = Image.new("RGBA", (1024, 1024), BACKGROUND)
     draw = ImageDraw.Draw(page)
-    draw.rectangle(HEADER, fill=CATEGORY.get(layout["category"], "#708649"))
+    names = [name.lower() for name, _ in SECTIONS]
+    section = layout.get("section") or "Shelter"
+    index = names.index(section.lower()) if section.lower() in names else 0
+    colour, next_colour = SECTIONS[index][1], SECTIONS[index + 1][1]
+    draw.rectangle(HEADER, fill=colour)
     draw.rounded_rectangle(TOP_SLOT, radius=18, fill=SLOT)
-    draw.rounded_rectangle(PREVIOUS_BUTTON, radius=8, fill=PREVIOUS_BAR)
-    draw.rounded_rectangle(NEXT_BUTTON, radius=8, fill=NEXT_BAR)
+    draw.rounded_rectangle(PREVIOUS_BUTTON, radius=8, fill=colour)
+    draw.rounded_rectangle(NEXT_BUTTON, radius=8, fill=next_colour)
 
     render, pos = fit(clean_alpha(Image.open(base + "-render.png").convert("RGBA")), TOP_SLOT, 12)
     page.alpha_composite(render, pos)

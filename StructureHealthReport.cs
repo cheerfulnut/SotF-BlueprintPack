@@ -4,7 +4,7 @@ using RedLoader;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace HouseBlueprint;
+namespace BlueprintPack;
 
 /// <summary>
 ///     Research only: logs the health the game gives each built structure (for example stone walls versus log walls),
@@ -43,13 +43,13 @@ internal static class StructureHealthReport
                           + $"at ({p.x:0.0},{p.y:0.0},{p.z:0.0})");
             }
 
-            RLog.Msg($"[HouseBlueprint] Structure health report: {lines.Count} structures with health");
+            RLog.Msg($"[BlueprintPack] Structure health report: {lines.Count} structures with health");
             foreach (var line in lines.OrderBy(l => l).Take(MaxLines))
-                RLog.Msg("[HouseBlueprint]   " + line);
+                RLog.Msg("[BlueprintPack]   " + line);
         }
         catch (Exception e)
         {
-            RLog.Error($"[HouseBlueprint] Structure health report failed: {e}");
+            RLog.Error($"[BlueprintPack] Structure health report failed: {e}");
         }
     }
 }

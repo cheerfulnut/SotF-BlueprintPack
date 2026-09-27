@@ -62,7 +62,7 @@ name = scene.get("hb_blueprint_name", os.path.basename(base))
 layout = {
     "id": recipe_id,
     "name": name,
-    "category": "Shelters",
+    "section": scene.get("hb_section", "Shelter"),
     "page": os.path.basename(base) + "-page.png",
     "ingredients": totals,
     "parts": parts,

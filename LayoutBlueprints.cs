@@ -12,10 +12,10 @@ using SonsSdk.Networking;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace HouseBlueprint;
+namespace BlueprintPack;
 
 /// <summary>
-///     Blueprints designed in Blender: each Mods\HouseBlueprint\Blueprints\*.json layout (from blender/export_design.py
+///     Blueprints designed in Blender: each Mods\BlueprintPack\Blueprints\*.json layout (from blender/export_design.py
 ///     and blender/make_page.py) becomes a free-form blueprint with its own book page, built from the game's own pieces.
 /// </summary>
 internal static class LayoutBlueprints
@@ -25,13 +25,29 @@ internal static class LayoutBlueprints
 
     // Medium Cabin: a free-form shelter blueprint without an automatic foundation; supplies the ghost's frame.
     private const int FrameRecipeId = 30;
-    private const string ShelterPageTitle = "BLUEPRINT_PAGE_SHELTER";
+    // Book sections a layout can go in: the page title the book uses for it, and the recipe category the game's own
+    // blueprints in that section have.
+    private static readonly Dictionary<string, (string Title, StructureRecipe.CategoryType Category)> Sections =
+        new(StringComparer.OrdinalIgnoreCase)
+        {
+            ["Shelter"] = ("BLUEPRINT_PAGE_SHELTER", StructureRecipe.CategoryType.Shelters),
+            ["TreeShelter"] = ("BLUEPRINT_PAGE_TREE_SHELTER", StructureRecipe.CategoryType.Decoration),
+            ["Platform"] = ("BLUEPRINT_PAGE_PLATFORM", StructureRecipe.CategoryType.Decoration),
+            ["DefensiveWalls"] = ("BLUEPRINT_PAGE_DEFENSIVE_WALLS", StructureRecipe.CategoryType.Decoration),
+            ["Furniture"] = ("BLUEPRINT_PAGE_FURNITURE", StructureRecipe.CategoryType.Furniture),
+            ["Storage"] = ("BLUEPRINT_PAGE_STORAGE", StructureRecipe.CategoryType.Utility),
+            ["Utility"] = ("BLUEPRINT_PAGE_UTILITY", StructureRecipe.CategoryType.Utility),
+            ["Traps"] = ("BLUEPRINT_PAGE_TRAPS", StructureRecipe.CategoryType.Traps),
+            ["Rafts"] = ("BLUEPRINT_PAGE_RAFTS", StructureRecipe.CategoryType.Utility),
+        };
+    private const string DefaultSection = "Shelter";
 
     private sealed class Layout
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Category { get; set; }
+        public string Section { get; set; }
+        public string Category { get; set; } // layouts from before sections existed; always meant Shelter
         public string Page { get; set; }
         public List<LayoutPart> Parts { get; set; }
     }
@@ -55,7 +71,7 @@ internal static class LayoutBlueprints
     private static List<Layout> _layouts;
     private static GameObject _prefabHolder;
 
-    private static string Folder => Path.Combine(LoaderEnvironment.ModsDirectory, "HouseBlueprint", "Blueprints");
+    private static string Folder => Path.Combine(LoaderEnvironment.ModsDirectory, "BlueprintPack", "Blueprints");
 
     public static bool TryGetName(StructureRecipe recipe, out string name)
     {
@@ -88,17 +104,17 @@ internal static class LayoutBlueprints
                 if (!db.TryGetRecipeById(layout.Id, out _))
                 {
                     db._recipes.Add(BuiltById[layout.Id].Recipe);
-                    RLog.Msg($"[HouseBlueprint] Registered recipe #{layout.Id} '{layout.Name}'.");
+                    RLog.Msg($"[BlueprintPack] Registered recipe #{layout.Id} '{layout.Name}'.");
                 }
             }
             catch (Exception e)
             {
-                RLog.Error($"[HouseBlueprint] Blueprint '{layout.Name}' failed: {e}");
+                RLog.Error($"[BlueprintPack] Blueprint '{layout.Name}' failed: {e}");
             }
         }
     }
 
-    /// <summary>Adds each blueprint's page once, after the game's shelter pages.</summary>
+    /// <summary>Adds each blueprint's page once, at the end of its book section (the Shelter pages by default).</summary>
     public static void EnsureBookPages()
     {
         var held = ItemTools.GetHeldPrefab(ItemTools.Identifiers.BlueprintBook);
@@ -109,27 +125,45 @@ internal static class LayoutBlueprints
         var pages = book._pages._pages;
         foreach (var built in BuiltById.Values.OrderBy(b => b.Layout.Id))
         {
-            var insertAt = 0;
+            var title = Sections[SectionOf(built.Layout)].Title;
+            var insertAt = -1;
             var present = false;
             for (var i = 0; i < pages.Count; i++)
             {
                 if (pages[i]._topRecipe == built.Recipe)
                     present = true;
-                if (pages[i]._pageTitleLocalizationId == ShelterPageTitle)
+                if (pages[i]._pageTitleLocalizationId == title)
                     insertAt = i + 1;
             }
 
             if (present)
                 continue;
+            if (insertAt < 0)
+            {
+                RLog.Warning($"[BlueprintPack] Book section {title} not found; '{built.Layout.Name}' goes at the end.");
+                insertAt = pages.Count;
+            }
+
             pages.Insert(insertAt, new BlueprintBookPageData
             {
                 _topRecipe = built.Recipe,
                 _bottomRecipe = null,
-                _pageTitleLocalizationId = ShelterPageTitle,
+                _pageTitleLocalizationId = title,
                 _pageImage = built.PageImage
             });
-            RLog.Msg($"[HouseBlueprint] Added book page {insertAt} for '{built.Layout.Name}'.");
+            RLog.Msg($"[BlueprintPack] Added book page {insertAt} ({SectionOf(built.Layout)}) for '{built.Layout.Name}'.");
         }
+    }
+
+    /// <summary>The layout's book section; unknown or missing sections fall back to Shelter.</summary>
+    private static string SectionOf(Layout layout)
+    {
+        var section = string.IsNullOrWhiteSpace(layout.Section) ? DefaultSection : layout.Section.Trim();
+        if (Sections.ContainsKey(section))
+            return Sections.Keys.First(k => string.Equals(k, section, StringComparison.OrdinalIgnoreCase));
+        RLog.Warning($"[BlueprintPack] '{layout.Name}': unknown book section '{section}'; using {DefaultSection}. "
+                     + $"Sections: {string.Join(", ", Sections.Keys)}.");
+        return DefaultSection;
     }
 
     private static List<Layout> LoadLayouts()
@@ -146,7 +180,7 @@ internal static class LayoutBlueprints
                 var layout = JsonSerializer.Deserialize<Layout>(File.ReadAllText(file), options);
                 if (layout?.Parts == null || layout.Parts.Count == 0 || layout.Id <= 0)
                 {
-                    RLog.Error($"[HouseBlueprint] {Path.GetFileName(file)} has no id or no parts; skipped.");
+                    RLog.Error($"[BlueprintPack] {Path.GetFileName(file)} has no id or no parts; skipped.");
                     continue;
                 }
 
@@ -154,11 +188,11 @@ internal static class LayoutBlueprints
             }
             catch (Exception e)
             {
-                RLog.Error($"[HouseBlueprint] Could not read {Path.GetFileName(file)}: {e.Message}");
+                RLog.Error($"[BlueprintPack] Could not read {Path.GetFileName(file)}: {e.Message}");
             }
         }
 
-        RLog.Msg($"[HouseBlueprint] Found {layouts.Count} blueprint layout(s) in {Folder}.");
+        RLog.Msg($"[BlueprintPack] Found {layouts.Count} blueprint layout(s) in {Folder}.");
         return layouts;
     }
 
@@ -166,21 +200,21 @@ internal static class LayoutBlueprints
     {
         if (!db.TryGetRecipeById(FrameRecipeId, out var frame))
         {
-            RLog.Error($"[HouseBlueprint] Frame recipe #{FrameRecipeId} not found.");
+            RLog.Error($"[BlueprintPack] Frame recipe #{FrameRecipeId} not found.");
             return null;
         }
 
         if (_prefabHolder == null)
         {
             // Clones made under an inactive parent never run their start-up code, but clones the game makes of them do.
-            _prefabHolder = new GameObject("HouseBlueprint.LayoutPrefabs");
+            _prefabHolder = new GameObject("BlueprintPack.LayoutPrefabs");
             _prefabHolder.SetActive(false);
             _prefabHolder.hideFlags = HideFlags.HideAndDontSave;
             Object.DontDestroyOnLoad(_prefabHolder);
         }
 
         var node = Object.Instantiate(frame._structureNodePrefab, _prefabHolder.transform);
-        node.name = $"HouseBlueprint{layout.Id}StructureNode";
+        node.name = $"BlueprintPack{layout.Id}StructureNode";
         var ghost = node.GetComponentInChildren<FreeFormGhostPrefab>(true).transform;
         for (var i = ghost.childCount - 1; i >= 0; i--)
             Object.DestroyImmediate(ghost.GetChild(i).gameObject);
@@ -191,13 +225,13 @@ internal static class LayoutBlueprints
             var position = new Vector3(part.Position[0], part.Position[1], part.Position[2]);
             if (!PartLibrary.Place(db, part.Type, ghost, position, part.Yaw))
             {
-                RLog.Error($"[HouseBlueprint] '{layout.Name}': part '{part.Name}' ({part.Type}) could not be made.");
+                RLog.Error($"[BlueprintPack] '{layout.Name}': part '{part.Name}' ({part.Type}) could not be made.");
                 continue;
             }
 
             var added = CountIngredients(ghost).Select(kv => $"{kv.Value - before.GetValueOrDefault(kv.Key)}x{kv.Key}")
                                                .Where(s => !s.StartsWith("0x"));
-            RLog.Msg($"[HouseBlueprint]   {part.Name} ({part.Type}): {string.Join(", ", added)}");
+            RLog.Msg($"[BlueprintPack]   {part.Name} ({part.Type}): {string.Join(", ", added)}");
         }
 
         var craftingNode = node.GetComponent<StructureCraftingNode>();
@@ -209,12 +243,12 @@ internal static class LayoutBlueprints
         EntityManager.RegisterPrefab(entity);
 
         var recipe = Object.Instantiate(frame);
-        recipe.name = $"HouseBlueprint{layout.Id}Recipe";
+        recipe.name = $"BlueprintPack{layout.Id}Recipe";
         recipe.hideFlags = HideFlags.HideAndDontSave;
         recipe._id = layout.Id;
         recipe._boltPrefabId = layout.Id + BoltPrefabOffset;
         recipe._displayName = layout.Name;
-        recipe._category = StructureRecipe.CategoryType.Shelters;
+        recipe._category = Sections[SectionOf(layout)].Category;
         recipe._isDiscovered = true;
         recipe._isDiscoveredInCreative = true;
         recipe._structureNodePrefab = node;
@@ -229,10 +263,10 @@ internal static class LayoutBlueprints
         }
         catch (Exception e)
         {
-            RLog.Warning($"[HouseBlueprint] Could not add book text for '{layout.Name}': {e.Message}");
+            RLog.Warning($"[BlueprintPack] Could not add book text for '{layout.Name}': {e.Message}");
         }
 
-        RLog.Msg($"[HouseBlueprint] Built '{layout.Name}' (#{layout.Id}): "
+        RLog.Msg($"[BlueprintPack] Built '{layout.Name}' (#{layout.Id}): "
                  + string.Join(", ", totals.Select(t => $"{t.Count}x item {t.Item}")));
         return new Built { Layout = layout, Recipe = recipe, PageImage = LoadPageImage(layout) };
     }
@@ -305,18 +339,18 @@ internal static class LayoutBlueprints
         var path = Path.Combine(Folder, layout.Page ?? "");
         if (string.IsNullOrEmpty(layout.Page) || !File.Exists(path))
         {
-            RLog.Warning($"[HouseBlueprint] No page image for '{layout.Name}' ({layout.Page}).");
+            RLog.Warning($"[BlueprintPack] No page image for '{layout.Name}' ({layout.Page}).");
             return null;
         }
 
         var texture = new Texture2D(2, 2, TextureFormat.RGBA32, true);
         if (!ImageConversion.LoadImage(texture, (Il2CppStructArray<byte>)File.ReadAllBytes(path)))
         {
-            RLog.Warning($"[HouseBlueprint] Could not read page image {layout.Page}.");
+            RLog.Warning($"[BlueprintPack] Could not read page image {layout.Page}.");
             return null;
         }
 
-        texture.name = $"HouseBlueprint{layout.Id}Page";
+        texture.name = $"BlueprintPack{layout.Id}Page";
         texture.hideFlags = HideFlags.HideAndDontSave;
         return texture;
     }

@@ -1,6 +1,6 @@
 # Building guide
 
-How to design, build and test new House Blueprint buildings. Written for future Claude sessions (and anyone else
+How to design, build and test new Blueprint Pack buildings. Written for future Claude sessions (and anyone else
 working on the mod). Everything marked VERIFIED was confirmed in the game in September 2026; INFERRED means reasoned
 from the game's code or data but not yet tested.
 
@@ -19,21 +19,21 @@ from the game's code or data but not yet tested.
 - Each layout becomes a **free-form blueprint** (like the game's Small/Medium Cabin): a ghost the player fills with
   materials; when complete it turns into ordinary game structures. VERIFIED: the save then contains no reference to
   the mod.
-- The **book page** is a 1024 x 1024 picture we render ourselves (no game art), shown after the game's Shelter pages.
-  The book draws the blueprint's name itself; the mod supplies it (`Patches.cs`).
+- The **book page** is a 1024 x 1024 picture we render ourselves (no game art), added at the end of the blueprint's
+  book section (section 4, step 2). The book draws the blueprint's name itself; the mod supplies it (`Patches.cs`).
 
 ## 2. Repository layout
 
 | Path | What |
 |---|---|
-| `HouseBlueprintMod.cs` | Mod entry point; registers the `hb_remove` console command; research switches (off). |
-| `LayoutBlueprints.cs` | Reads `Mods\HouseBlueprint\Blueprints\*.json`, builds recipes, ghosts and book pages. |
+| `BlueprintPackMod.cs` | Mod entry point; registers the `bp_remove` console command; research switches (off). |
+| `LayoutBlueprints.cs` | Reads `Mods\BlueprintPack\Blueprints\*.json`, builds recipes, ghosts and book pages. |
 | `PartLibrary.cs` | Every part type: which game blueprint it is copied from and how it is changed. |
 | `Patches.cs` | Registers recipes before saves load; writes our names into the book. |
-| `StructureRemover.cs` | `hb_remove` console command. |
+| `StructureRemover.cs` | `bp_remove` console command. |
 | `Diagnostics.cs`, `PageExport.cs`, `StructureHealthReport.cs` | Research helpers (see section 9). |
 | `blender/hb_parts.py` | Kit parts: sizes, stand-in meshes, ingredient counts for the page. |
-| `blender/hb_design.py` | Design-file setup (kit column, locked parts, snapping, level collections). |
+| `blender/hb_design.py` | Design-file setup (kit column, locked parts, snapping, level collections, book section). |
 | `blender/make_kit.py`, `blender/make_tower.py` | Generators for design files. |
 | `blender/export_design.py` | Design file -> layout JSON + renders (Blender, headless). |
 | `blender/make_page.py` | Renders -> book page PNG (Python + Pillow). |
@@ -41,11 +41,14 @@ from the game's code or data but not yet tested.
 | `design/*.blend` | Design files. `Blueprints/` holds what gets installed. `build/`, `dist/` are generated. |
 | `tools/typedump` | Read-only inspector for the game's generated DLLs (section 9). |
 
+The mod was first called House Blueprint: the Blender scripts' `hb_` prefix and the `hb_part` / `hb_section`
+properties in design files come from that; they stay as they are so existing design files keep working.
+
 ## 3. Tools and setup
 
 - **.NET 10 SDK** (version pinned in `global.json`).
 - **RedLoader 0.9.2+** installed in the game, and the game run once, so `_Redloader\Game` exists.
-- **Game folder**: `GamePath.user.props` next to `HouseBlueprint.csproj` (not committed; see README). Blender and
+- **Game folder**: `GamePath.user.props` next to `BlueprintPack.csproj` (not committed; see README). Blender and
   Python paths below are whatever is installed on the machine.
 - **Blender 5.2** (LTS). Always run headless for scripted work:
   `blender --background --factory-startup --python <script> -- <args>` (new files), or
@@ -59,7 +62,10 @@ from the game's code or data but not yet tested.
    where it will stand (flat ground is needed; section 8). Offer choices rather than long explanations.
 2. **Write a generator** `blender/make_<name>.py`, modelled on `make_tower.py`: compute every part's position from a
    few constants (sections per side, storeys, which walls have windows...). Put each level in its own collection
-   (`d.group("Level 2 - Logs")`) so the user can hide levels in Blender to look inside. Hand-arranging in Blender also
+   (`d.group("Level 2 - Logs")`) so the user can hide levels in Blender to look inside. Choose the book section with
+   `hb_design.Design("<Name (n levels)>", section="...")`: `Shelter`, `TreeShelter`, `Platform`, `DefensiveWalls`,
+   `Furniture`, `Storage`, `Utility`, `Traps` or `Rafts`. The page gets that section's colours and goes at the end of
+   it (Shelter is tested; the others are INFERRED to work the same way). Hand-arranging in Blender also
    works (the kit column is on the left; every part outside it is exported), but users find it fiddly.
 3. **Generate the design file.** It refuses to overwrite an existing file unless `--force`. **Never write a `.blend`
    the user has open in Blender**; ask them to close it, or write a new file name.
@@ -80,8 +86,8 @@ from the game's code or data but not yet tested.
    ```
    Check the export's warnings and the ingredient totals; view `Blueprints/<name>-page.png`.
 7. **Build the mod** if any part code changed: `dotnet build -c Release` (add `-t:Package` for the release zip).
-8. **Install** (game closed): copy `bin\Release\net10.0\HouseBlueprint.dll` to `<game>\Mods\`, and the layout and
-   page to `<game>\Mods\HouseBlueprint\Blueprints\`. Record a before/after listing of the game folder (section 10).
+8. **Install** (game closed): copy `bin\Release\net10.0\BlueprintPack.dll` to `<game>\Mods\`, and the layout and
+   page to `<game>\Mods\BlueprintPack\Blueprints\`. Record a before/after listing of the game folder (section 10).
 9. **Test in a Peaceful single-player save** (section 7), read `<game>\_Redloader\Latest.log` (every part logs the
    ingredients it made; errors say which part failed), and commit.
 
@@ -124,7 +130,7 @@ shows; the mod counts the real pieces and logs them.
 
 - Use a **Peaceful** single-player save (the game has no Creative mode). Back up saves first if they matter.
 - **F1** opens the game console. RedLoader's `finishblueprints <radius>` completes ghosts within the radius instantly
-  (skips the material cost; test saves only). `cancelblueprints <radius>` removes ghosts. Our `hb_remove` removes
+  (skips the material cost; test saves only). `cancelblueprints <radius>` removes ghosts. Our `bp_remove` removes
   finished buildings (README). `noforest` clears trees (unknown whether that persists in the save).
 - Checklist for a new building: page (name, picture, ingredients); ghost appears whole and fits the ground; finishes
   without errors; walk every route (ropes both ways, ramps both ways, no crouching); nothing falls; save, reload.
@@ -159,15 +165,15 @@ shows; the mod counts the real pieces and logs them.
   then logs, then planks...). Not yet improved.
 - **Book**: our page goes after the game's Shelter pages; a page with no bottom blueprint works. Game page textures
   only load full resolution while shown, so never build pages from the game's own art.
-- **hb_remove**: the game's `StructureDestructionManager.DestroyStructureDebug` reports success without removing
+- **bp_remove**: the game's `StructureDestructionManager.DestroyStructureDebug` reports success without removing
   anything; `RuntimeStructureDatabase.DestroyStructure` works. The game's own "super structure" grouping does not join
   a blueprint-built tower, so the command finds buildings by touching pieces. It must never remove tarps (save points).
 
 ## 9. Research tools
 
-- `Diagnostics.cs` (switch `RunDiagnostics` in `HouseBlueprintMod.cs`): writes the game's recipes, book pages,
+- `Diagnostics.cs` (switch `RunDiagnostics` in `BlueprintPackMod.cs`): writes the game's recipes, book pages,
   building-piece profiles (ids, items, sizes) and the layout of every free-form and shelter blueprint to
-  `Mods\HouseBlueprint\diagnostics.txt`. This is where templates and piece ids come from.
+  `Mods\BlueprintPack\diagnostics.txt`. This is where templates and piece ids come from.
 - `PageExport.cs` (switch `ExportPages`): saves some book pages as PNGs, for layout reference only. They are the
   game's artwork: never commit or publish them.
 - `tools/typedump`: `dotnet build tools/typedump -c Release -o tools/typedump/out`, then

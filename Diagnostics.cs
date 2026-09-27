@@ -10,11 +10,11 @@ using SonsSdk;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace HouseBlueprint;
+namespace BlueprintPack;
 
 /// <summary>
 ///     Research only: writes the game's blueprint recipes, blueprint book pages, building-piece types and the layout of
-///     free-form and shelter blueprints to Mods\HouseBlueprint\diagnostics.txt. It only reads game data.
+///     free-form and shelter blueprints to Mods\BlueprintPack\diagnostics.txt. It only reads game data.
 /// </summary>
 internal static class Diagnostics
 {
@@ -36,7 +36,7 @@ internal static class Diagnostics
         _done = true;
 
         var sb = new StringBuilder();
-        sb.AppendLine($"HouseBlueprint diagnostics {DateTime.Now:yyyy-MM-dd HH:mm:ss}, game {Sons.GameApplication.Version.GetVersionString()}");
+        sb.AppendLine($"BlueprintPack diagnostics {DateTime.Now:yyyy-MM-dd HH:mm:ss}, game {Sons.GameApplication.Version.GetVersionString()}");
         Section(sb, "Recipes", DumpRecipes);
         Section(sb, "Blueprint book pages", DumpBookPages);
         Section(sb, "Element profiles (building pieces)", DumpProfiles);
@@ -45,7 +45,7 @@ internal static class Diagnostics
         Directory.CreateDirectory(dataDir);
         var path = Path.Combine(dataDir, "diagnostics.txt");
         File.WriteAllText(path, sb.ToString());
-        RLog.Msg($"[HouseBlueprint] Diagnostics written to {path}");
+        RLog.Msg($"[BlueprintPack] Diagnostics written to {path}");
     }
 
     private static void Section(StringBuilder sb, string title, Action<StringBuilder> body)
@@ -58,7 +58,7 @@ internal static class Diagnostics
         catch (Exception e)
         {
             sb.AppendLine($"!! section failed: {e}");
-            RLog.Error($"[HouseBlueprint] Diagnostics section '{title}' failed: {e}");
+            RLog.Error($"[BlueprintPack] Diagnostics section '{title}' failed: {e}");
         }
     }
 

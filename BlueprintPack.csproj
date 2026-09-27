@@ -7,8 +7,8 @@
     <Import Project="GamePath.user.props" Condition="Exists('GamePath.user.props')" />
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
-        <AssemblyName>HouseBlueprint</AssemblyName>
-        <RootNamespace>HouseBlueprint</RootNamespace>
+        <AssemblyName>BlueprintPack</AssemblyName>
+        <RootNamespace>BlueprintPack</RootNamespace>
         <Version>0.1.0</Version>
         <LangVersion>latest</LangVersion>
         <Nullable>disable</Nullable>
@@ -48,15 +48,15 @@
     <Target Name="Package" DependsOnTargets="Build">
         <PropertyGroup>
             <StageDir>$(MSBuildProjectDirectory)\dist\stage</StageDir>
-            <ZipFile>$(MSBuildProjectDirectory)\dist\HouseBlueprint-$(Version).zip</ZipFile>
+            <ZipFile>$(MSBuildProjectDirectory)\dist\BlueprintPack-$(Version).zip</ZipFile>
         </PropertyGroup>
         <ItemGroup>
             <BlueprintFiles Include="Blueprints\*.json;Blueprints\*.png" />
         </ItemGroup>
         <RemoveDir Directories="$(StageDir)" />
         <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(StageDir)\Mods" />
-        <Copy SourceFiles="manifest.json" DestinationFolder="$(StageDir)\Mods\HouseBlueprint" />
-        <Copy SourceFiles="@(BlueprintFiles)" DestinationFolder="$(StageDir)\Mods\HouseBlueprint\Blueprints" />
+        <Copy SourceFiles="manifest.json" DestinationFolder="$(StageDir)\Mods\BlueprintPack" />
+        <Copy SourceFiles="@(BlueprintFiles)" DestinationFolder="$(StageDir)\Mods\BlueprintPack\Blueprints" />
         <Delete Files="$(ZipFile)" />
         <ZipDirectory SourceDirectory="$(StageDir)" DestinationFile="$(ZipFile)" />
         <Message Importance="high" Text="Packaged $(ZipFile)" />

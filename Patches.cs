@@ -3,7 +3,7 @@ using RedLoader;
 using Sons.Crafting.Structures;
 using Sons.Weapon;
 
-namespace HouseBlueprint;
+namespace BlueprintPack;
 
 /// <summary>
 ///     Registers our recipes as soon as the game's structure crafting system starts, and again just before it restores
@@ -39,7 +39,7 @@ internal static class Patches
         }
         catch (Exception e)
         {
-            RLog.Error($"[HouseBlueprint] Registering blueprints failed: {e}");
+            RLog.Error($"[BlueprintPack] Registering blueprints failed: {e}");
         }
     }
 
@@ -61,7 +61,7 @@ internal static class Patches
         }
         catch (Exception e)
         {
-            RLog.Error($"[HouseBlueprint] Showing blueprint names failed: {e.Message}");
+            RLog.Error($"[BlueprintPack] Showing blueprint names failed: {e.Message}");
         }
     }
 

@@ -5,7 +5,7 @@ using Sons.Crafting.Structures;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace HouseBlueprint;
+namespace BlueprintPack;
 
 /// <summary>
 ///     The parts a layout can use, each copied from the game's own free-form blueprints so that the ghost and the
@@ -100,7 +100,7 @@ internal static class PartLibrary
                 return post != null && ReplaceWithFullPost(post);
             }
             default:
-                RLog.Error($"[HouseBlueprint] Unknown part type '{type}'.");
+                RLog.Error($"[BlueprintPack] Unknown part type '{type}'.");
                 return false;
         }
     }
@@ -153,7 +153,7 @@ internal static class PartLibrary
     {
         if (template == null)
         {
-            RLog.Error("[HouseBlueprint] A part's template was not found in the game's blueprints.");
+            RLog.Error("[BlueprintPack] A part's template was not found in the game's blueprints.");
             return null;
         }
 
@@ -192,7 +192,7 @@ internal static class PartLibrary
             var child = ghost.Find(name);
             if (child == null)
             {
-                RLog.Error($"[HouseBlueprint] '{name}' not found in blueprint #{recipeId}.");
+                RLog.Error($"[BlueprintPack] '{name}' not found in blueprint #{recipeId}.");
                 return false;
             }
 
@@ -319,7 +319,7 @@ internal static class PartLibrary
         var profile = ElementProfileDatabase.GetProfile(LogPilarProfile);
         if (stub == null || profile == null || profile._prefab == null)
         {
-            RLog.Error("[HouseBlueprint] Log post piece not found.");
+            RLog.Error("[BlueprintPack] Log post piece not found.");
             return false;
         }
 
@@ -336,7 +336,7 @@ internal static class PartLibrary
             var profile = ElementProfileDatabase.GetProfile(id);
             if (profile == null || profile._prefab == null)
             {
-                RLog.Error($"[HouseBlueprint] Building piece {id} not found in the game's piece database.");
+                RLog.Error($"[BlueprintPack] Building piece {id} not found in the game's piece database.");
                 return false;
             }
         }

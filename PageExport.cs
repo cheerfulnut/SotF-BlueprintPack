@@ -3,10 +3,10 @@ using Sons.Weapon;
 using SonsSdk;
 using UnityEngine;
 
-namespace HouseBlueprint;
+namespace BlueprintPack;
 
 /// <summary>
-///     Research only: saves a few of the blueprint book's page images as PNGs in Mods\HouseBlueprint\page-export, as a
+///     Research only: saves a few of the blueprint book's page images as PNGs in Mods\BlueprintPack\page-export, as a
 ///     local reference for the layout of our own page. They are the game's artwork: keep them out of the repository.
 /// </summary>
 internal static class PageExport
@@ -44,11 +44,11 @@ internal static class PageExport
             }
             catch (Exception e)
             {
-                RLog.Error($"[HouseBlueprint] Could not export page {i}: {e.Message}");
+                RLog.Error($"[BlueprintPack] Could not export page {i}: {e.Message}");
             }
         }
 
-        RLog.Msg($"[HouseBlueprint] Exported {saved.Count} page images to {outDir}");
+        RLog.Msg($"[BlueprintPack] Exported {saved.Count} page images to {outDir}");
     }
 
     /// <summary>Page textures are GPU-compressed and not readable, so draw them into a readable copy first.</summary>

@@ -1,4 +1,4 @@
-# House Blueprint
+# Blueprint Pack
 
 A RedLoader mod for Sons of the Forest that adds buildings to the blueprint book, designed in Blender and built in
 the game from the game's own pieces.

@@ -44,7 +44,7 @@ half = SECTIONS * M                              # side lines at +-half
 centres = [-half + M + 2 * M * i for i in range(SECTIONS)]
 interior_lines = [-half + 2 * M * j for j in range(1, SECTIONS)]
 
-d = hb_design.Design("Stone Tower")
+d = hb_design.Design("Stone Tower (5 levels)", section="Shelter")
 middle = centres[SECTIONS // 2]
 
 # The ramp runs along the left column of tiles, middle and back, rising towards +Y (the back); the deck is open above
