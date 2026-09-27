@@ -35,7 +35,6 @@ internal static class Patches
         // Never let our code break the game's start-up or save loading.
         try
         {
-            TestWallBlueprint.EnsureRegistered(system._recipeDatabase);
             LayoutBlueprints.EnsureRegistered(system._recipeDatabase);
         }
         catch (Exception e)
@@ -66,6 +65,5 @@ internal static class Patches
         }
     }
 
-    private static bool TryGetName(StructureRecipe recipe, out string name) =>
-        LayoutBlueprints.TryGetName(recipe, out name) || TestWallBlueprint.TryGetName(recipe, out name);
+    private static bool TryGetName(StructureRecipe recipe, out string name) => LayoutBlueprints.TryGetName(recipe, out name);
 }

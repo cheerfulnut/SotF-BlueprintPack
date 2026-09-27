@@ -28,12 +28,7 @@ public class HouseBlueprintMod : SonsMod
         {
             // The patches normally registered the recipe already; this is a fallback if they did not run.
             if (StructureCraftingSystem.TryGetInstance(out var system))
-            {
-                TestWallBlueprint.EnsureRegistered(system._recipeDatabase);
                 LayoutBlueprints.EnsureRegistered(system._recipeDatabase);
-            }
-
-            TestWallBlueprint.EnsureBookPage();
             LayoutBlueprints.EnsureBookPages();
         }
         catch (Exception e)
