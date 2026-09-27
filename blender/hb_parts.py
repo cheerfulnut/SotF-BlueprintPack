@@ -34,7 +34,8 @@ PARTS = {
     "Beam": ("Log beam spanning 2.26 m; origin at the log's centre", {"Log": 1}),
     "Floor": ("Floor of 5 planks, 2.26 m square; origin at the planks' centre, 0.163 m above the beams' centre",
               {"Plank": 5}),
-    "HatchFloor": ("Floor with a hole and a climbing rope hanging down through it; origin as Floor",
+    "HatchFloor": ("Floor with a hole and a climbing rope hanging down through it; origin as Floor. The hole is on "
+                   "the local +X side and you step off the rope that way: keep that side away from walls",
                    {"Plank": 5, "Rope": 1}),
     "Parapet": ("Log railing, 3 logs high; origin on the ground like the walls", {"Log": 3}),
     "Rope": ("Climbing rope; origin at its top, it hangs down to the ground. It has a front: you climb facing the "

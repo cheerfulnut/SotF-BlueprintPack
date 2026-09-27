@@ -74,7 +74,10 @@ def floor(z, group, hatch_at=None, stone_at=None):
     for cx in centres:
         for cy in centres:
             part = "HatchFloor" if (cx, cy) == hatch_at else "StoneFloor" if (cx, cy) == stone_at else "Floor"
-            d.add(part, cx, cy, z + hb_parts.BEAM_TO_FLOOR, 0.0, collection=group)
+            # A hatch's hole and rope are on its local +X side, and you step off the rope that way at the top: turn
+            # it so that side faces the middle of the tower, not the outer wall (there is no floor to step onto there).
+            yaw = 180.0 if part == "HatchFloor" and cx > 0 else 0.0
+            d.add(part, cx, cy, z + hb_parts.BEAM_TO_FLOOR, yaw, collection=group)
 
 
 contact = 0.0  # where the current storey's walls stand
