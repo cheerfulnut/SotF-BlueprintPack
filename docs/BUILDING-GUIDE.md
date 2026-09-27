@@ -194,7 +194,19 @@ shows; the mod counts the real pieces and logs them.
   to `/_/`; no game files or game art.
 - One change per commit, with a message explaining why.
 
-## 11. Open items
+## 11. Releasing
+
+The repository is public: <https://github.com/cheerfulnut/SotF-BlueprintPack>. For a new release:
+1. Bump the version in `BlueprintPack.csproj` (`<Version>`) and `manifest.json` (`version`) together.
+2. Update README.md (buildings, materials) and this guide.
+3. Before pushing, check for anything personal or machine-specific: no local paths, user names or save ids in files
+   or commit messages, and the DLL's embedded debug information lists only `/_/...` source paths.
+4. `dotnet build -c Release -t:Package`, then
+   `gh release create v<version> dist/BlueprintPack-<version>.zip --title "Blueprint Pack <version>" --notes-file <notes>`
+   with notes for players: what is new, materials, install, known limits, and the zip's SHA-256.
+5. Only publish after the user has tested the build in the game and agreed.
+
+## 12. Open items
 
 - Automatic foundations for slopes (the Small Cabin's `AutoFoundations`), so buildings sit well on hills.
 - Build order: let players build level by level instead of one material at a time.
