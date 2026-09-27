@@ -46,6 +46,7 @@ internal static class Patches
 
     private static void ShowNames(BlueprintBookController book)
     {
+        StructureHealthReport.RunOnce();
         try
         {
             var pages = book._pages._pages;

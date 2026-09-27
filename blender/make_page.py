@@ -75,14 +75,17 @@ def main():
 
     items = sorted(layout["ingredients"].items(), key=lambda kv: ITEM_ORDER.index(kv[0]) if kv[0] in ITEM_ORDER else 99)
     rows = len(items)
-    first_centre = (TOP_SLOT[1] + TOP_SLOT[3]) // 2 - (rows - 1) * ROW_SPACING // 2
-    text_font = font(34)
+    # Up to four rows fit the game's spacing; more are squeezed into the slot's height (it has 290 px to share).
+    spacing = ROW_SPACING if rows <= 4 else 290 // (rows - 1)
+    icon_size = min(ICON_SIZE, spacing - 6)
+    first_centre = (TOP_SLOT[1] + TOP_SLOT[3]) // 2 - (rows - 1) * spacing // 2
+    text_font = font(34 if rows <= 4 else 30)
     for i, (item, count) in enumerate(items):
-        centre_y = first_centre + i * ROW_SPACING
-        box = (ICON_X, centre_y - ICON_SIZE // 2, ICON_X + ICON_SIZE, centre_y + ICON_SIZE // 2)
+        centre_y = first_centre + i * spacing
+        box = (ICON_X, centre_y - icon_size // 2, ICON_X + icon_size, centre_y + icon_size // 2)
         icon, icon_pos = fit(Image.open(f"{base}-icon-{item}.png").convert("RGBA"), box, 2)
         page.alpha_composite(icon, icon_pos)
-        draw.text((ICON_X + ICON_SIZE + 12, centre_y), f"x{count}", font=text_font, fill=COUNT_TEXT, anchor="lm")
+        draw.text((ICON_X + icon_size + 12, centre_y), f"x{count}", font=text_font, fill=COUNT_TEXT, anchor="lm")
 
     page_path = os.path.join(out_dir, layout["page"])
     page.convert("RGB").save(page_path)

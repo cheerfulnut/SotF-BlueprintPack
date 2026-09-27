@@ -1,0 +1,1506 @@
+{
+  "id": 9003,
+  "name": "Stone Tower",
+  "category": "Shelters",
+  "page": "stone-tower-page.png",
+  "ingredients": {
+    "Log": 262,
+    "Rope": 3,
+    "Plank": 90,
+    "HalfLog": 2,
+    "QuarterLog": 20,
+    "Stone": 245
+  },
+  "parts": [
+    {
+      "name": "Beam",
+      "type": "Beam",
+      "position": [
+        -2.26,
+        2.475,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.001",
+      "type": "Beam",
+      "position": [
+        -3.39,
+        2.475,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.002",
+      "type": "Beam",
+      "position": [
+        -2.26,
+        2.475,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.003",
+      "type": "Beam",
+      "position": [
+        3.39,
+        2.475,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.004",
+      "type": "Beam",
+      "position": [
+        0.0,
+        2.475,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.005",
+      "type": "Beam",
+      "position": [
+        -3.39,
+        2.475,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.006",
+      "type": "Beam",
+      "position": [
+        0.0,
+        2.475,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.007",
+      "type": "Beam",
+      "position": [
+        3.39,
+        2.475,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.008",
+      "type": "Beam",
+      "position": [
+        2.26,
+        2.475,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.009",
+      "type": "Beam",
+      "position": [
+        -3.39,
+        2.475,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.010",
+      "type": "Beam",
+      "position": [
+        2.26,
+        2.475,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.011",
+      "type": "Beam",
+      "position": [
+        3.39,
+        2.475,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.012",
+      "type": "Beam",
+      "position": [
+        -2.26,
+        5.175,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.013",
+      "type": "Beam",
+      "position": [
+        -3.39,
+        5.175,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.014",
+      "type": "Beam",
+      "position": [
+        -2.26,
+        5.175,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.015",
+      "type": "Beam",
+      "position": [
+        3.39,
+        5.175,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.016",
+      "type": "Beam",
+      "position": [
+        0.0,
+        5.175,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.017",
+      "type": "Beam",
+      "position": [
+        -3.39,
+        5.175,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.018",
+      "type": "Beam",
+      "position": [
+        0.0,
+        5.175,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.019",
+      "type": "Beam",
+      "position": [
+        3.39,
+        5.175,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.020",
+      "type": "Beam",
+      "position": [
+        2.26,
+        5.175,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.021",
+      "type": "Beam",
+      "position": [
+        -3.39,
+        5.175,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.022",
+      "type": "Beam",
+      "position": [
+        2.26,
+        5.175,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.023",
+      "type": "Beam",
+      "position": [
+        3.39,
+        5.175,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.024",
+      "type": "Beam",
+      "position": [
+        -2.26,
+        7.875,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.025",
+      "type": "Beam",
+      "position": [
+        -3.39,
+        7.875,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.026",
+      "type": "Beam",
+      "position": [
+        -2.26,
+        7.875,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.027",
+      "type": "Beam",
+      "position": [
+        3.39,
+        7.875,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.028",
+      "type": "Beam",
+      "position": [
+        0.0,
+        7.875,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.029",
+      "type": "Beam",
+      "position": [
+        -3.39,
+        7.875,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.030",
+      "type": "Beam",
+      "position": [
+        0.0,
+        7.875,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.031",
+      "type": "Beam",
+      "position": [
+        3.39,
+        7.875,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.032",
+      "type": "Beam",
+      "position": [
+        2.26,
+        7.875,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.033",
+      "type": "Beam",
+      "position": [
+        -3.39,
+        7.875,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.034",
+      "type": "Beam",
+      "position": [
+        2.26,
+        7.875,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.035",
+      "type": "Beam",
+      "position": [
+        3.39,
+        7.875,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.036",
+      "type": "Beam",
+      "position": [
+        -2.26,
+        7.875,
+        -1.13
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.037",
+      "type": "Beam",
+      "position": [
+        0.0,
+        7.875,
+        -1.13
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.038",
+      "type": "Beam",
+      "position": [
+        2.26,
+        7.875,
+        -1.13
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.039",
+      "type": "Beam",
+      "position": [
+        -2.26,
+        7.875,
+        1.13
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.040",
+      "type": "Beam",
+      "position": [
+        0.0,
+        7.875,
+        1.13
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.041",
+      "type": "Beam",
+      "position": [
+        2.26,
+        7.875,
+        1.13
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.042",
+      "type": "Beam",
+      "position": [
+        -2.26,
+        10.575,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.043",
+      "type": "Beam",
+      "position": [
+        -3.39,
+        10.575,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.044",
+      "type": "Beam",
+      "position": [
+        -2.26,
+        10.575,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.045",
+      "type": "Beam",
+      "position": [
+        3.39,
+        10.575,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.046",
+      "type": "Beam",
+      "position": [
+        0.0,
+        10.575,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.047",
+      "type": "Beam",
+      "position": [
+        -3.39,
+        10.575,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.048",
+      "type": "Beam",
+      "position": [
+        0.0,
+        10.575,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.049",
+      "type": "Beam",
+      "position": [
+        3.39,
+        10.575,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.050",
+      "type": "Beam",
+      "position": [
+        2.26,
+        10.575,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.051",
+      "type": "Beam",
+      "position": [
+        -3.39,
+        10.575,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.052",
+      "type": "Beam",
+      "position": [
+        2.26,
+        10.575,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.053",
+      "type": "Beam",
+      "position": [
+        3.39,
+        10.575,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Beam.054",
+      "type": "Beam",
+      "position": [
+        -2.26,
+        10.575,
+        -1.13
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.055",
+      "type": "Beam",
+      "position": [
+        0.0,
+        10.575,
+        -1.13
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.056",
+      "type": "Beam",
+      "position": [
+        2.26,
+        10.575,
+        -1.13
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.057",
+      "type": "Beam",
+      "position": [
+        -2.26,
+        10.575,
+        1.13
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.058",
+      "type": "Beam",
+      "position": [
+        0.0,
+        10.575,
+        1.13
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Beam.059",
+      "type": "Beam",
+      "position": [
+        2.26,
+        10.575,
+        1.13
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "CornerPost",
+      "type": "CornerPost",
+      "position": [
+        -3.84,
+        8.1,
+        -3.84
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "CornerPost.001",
+      "type": "CornerPost",
+      "position": [
+        -3.84,
+        10.8,
+        -3.84
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "CornerPost.002",
+      "type": "CornerPost",
+      "position": [
+        -3.84,
+        8.1,
+        3.84
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "CornerPost.003",
+      "type": "CornerPost",
+      "position": [
+        -3.84,
+        10.8,
+        3.84
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "CornerPost.004",
+      "type": "CornerPost",
+      "position": [
+        3.84,
+        8.1,
+        -3.84
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "CornerPost.005",
+      "type": "CornerPost",
+      "position": [
+        3.84,
+        10.8,
+        -3.84
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "CornerPost.006",
+      "type": "CornerPost",
+      "position": [
+        3.84,
+        8.1,
+        3.84
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "CornerPost.007",
+      "type": "CornerPost",
+      "position": [
+        3.84,
+        10.8,
+        3.84
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Entrance rope",
+      "type": "Rope",
+      "position": [
+        0.0,
+        10.575,
+        -5.8
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Floor",
+      "type": "Floor",
+      "position": [
+        -2.26,
+        8.038,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Floor.001",
+      "type": "Floor",
+      "position": [
+        -2.26,
+        8.038,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Floor.002",
+      "type": "Floor",
+      "position": [
+        -2.26,
+        8.038,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Floor.003",
+      "type": "Floor",
+      "position": [
+        0.0,
+        8.038,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Floor.004",
+      "type": "Floor",
+      "position": [
+        0.0,
+        8.038,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Floor.005",
+      "type": "Floor",
+      "position": [
+        0.0,
+        8.038,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Floor.006",
+      "type": "Floor",
+      "position": [
+        2.26,
+        8.038,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Floor.007",
+      "type": "Floor",
+      "position": [
+        2.26,
+        8.038,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Floor.008",
+      "type": "Floor",
+      "position": [
+        -2.26,
+        10.738,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Floor.009",
+      "type": "Floor",
+      "position": [
+        -2.26,
+        10.738,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Floor.010",
+      "type": "Floor",
+      "position": [
+        0.0,
+        10.738,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Floor.011",
+      "type": "Floor",
+      "position": [
+        0.0,
+        10.738,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Floor.012",
+      "type": "Floor",
+      "position": [
+        0.0,
+        10.738,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Floor.013",
+      "type": "Floor",
+      "position": [
+        2.26,
+        10.738,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Floor.014",
+      "type": "Floor",
+      "position": [
+        2.26,
+        10.738,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "HatchFloor",
+      "type": "HatchFloor",
+      "position": [
+        2.26,
+        8.038,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "HatchFloor.001",
+      "type": "HatchFloor",
+      "position": [
+        -2.26,
+        10.738,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Launch platform",
+      "type": "Balcony",
+      "position": [
+        0.0,
+        10.575,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "LogWall",
+      "type": "LogWall",
+      "position": [
+        -2.26,
+        2.7,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "LogWall.001",
+      "type": "LogWall",
+      "position": [
+        -3.39,
+        2.7,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "LogWall.002",
+      "type": "LogWall",
+      "position": [
+        -2.26,
+        2.7,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "LogWall.003",
+      "type": "LogWall",
+      "position": [
+        3.39,
+        2.7,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "LogWall.004",
+      "type": "LogWall",
+      "position": [
+        0.0,
+        2.7,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "LogWall.005",
+      "type": "LogWall",
+      "position": [
+        -3.39,
+        2.7,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "LogWall.006",
+      "type": "LogWall",
+      "position": [
+        0.0,
+        2.7,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "LogWall.007",
+      "type": "LogWall",
+      "position": [
+        3.39,
+        2.7,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "LogWall.008",
+      "type": "LogWall",
+      "position": [
+        2.26,
+        2.7,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "LogWall.009",
+      "type": "LogWall",
+      "position": [
+        -3.39,
+        2.7,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "LogWall.010",
+      "type": "LogWall",
+      "position": [
+        2.26,
+        2.7,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "LogWall.011",
+      "type": "LogWall",
+      "position": [
+        3.39,
+        2.7,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "LogWall.012",
+      "type": "LogWall",
+      "position": [
+        -2.26,
+        5.4,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "LogWall.013",
+      "type": "LogWall",
+      "position": [
+        -3.39,
+        5.4,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "LogWall.014",
+      "type": "LogWall",
+      "position": [
+        -2.26,
+        5.4,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "LogWall.015",
+      "type": "LogWall",
+      "position": [
+        3.39,
+        5.4,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "LogWall.016",
+      "type": "LogWall",
+      "position": [
+        0.0,
+        5.4,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "LogWall.017",
+      "type": "LogWall",
+      "position": [
+        -3.39,
+        5.4,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "LogWall.018",
+      "type": "LogWall",
+      "position": [
+        0.0,
+        5.4,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "LogWall.019",
+      "type": "LogWall",
+      "position": [
+        3.39,
+        5.4,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "LogWall.020",
+      "type": "LogWall",
+      "position": [
+        2.26,
+        5.4,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "LogWall.021",
+      "type": "LogWall",
+      "position": [
+        -3.39,
+        5.4,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "LogWall.022",
+      "type": "LogWall",
+      "position": [
+        2.26,
+        5.4,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "LogWall.023",
+      "type": "LogWall",
+      "position": [
+        3.39,
+        5.4,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "LogWall.024",
+      "type": "LogWall",
+      "position": [
+        -3.39,
+        8.1,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "LogWall.025",
+      "type": "LogWall",
+      "position": [
+        -2.26,
+        8.1,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "LogWall.026",
+      "type": "LogWall",
+      "position": [
+        3.39,
+        8.1,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "LogWall.027",
+      "type": "LogWall",
+      "position": [
+        0.0,
+        8.1,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "LogWall.028",
+      "type": "LogWall",
+      "position": [
+        2.26,
+        8.1,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "LogWall.029",
+      "type": "LogWall",
+      "position": [
+        -3.39,
+        8.1,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "LogWall.030",
+      "type": "LogWall",
+      "position": [
+        2.26,
+        8.1,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "LogWall.031",
+      "type": "LogWall",
+      "position": [
+        3.39,
+        8.1,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "LogWindowWall",
+      "type": "LogWindowWall",
+      "position": [
+        -2.26,
+        8.1,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "LogWindowWall.001",
+      "type": "LogWindowWall",
+      "position": [
+        -3.39,
+        8.1,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "LogWindowWall.002",
+      "type": "LogWindowWall",
+      "position": [
+        0.0,
+        8.1,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "LogWindowWall.003",
+      "type": "LogWindowWall",
+      "position": [
+        3.39,
+        8.1,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Parapet",
+      "type": "Parapet",
+      "position": [
+        -2.26,
+        10.8,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Parapet.001",
+      "type": "Parapet",
+      "position": [
+        -3.39,
+        10.8,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Parapet.002",
+      "type": "Parapet",
+      "position": [
+        -2.26,
+        10.8,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Parapet.003",
+      "type": "Parapet",
+      "position": [
+        3.39,
+        10.8,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Parapet.004",
+      "type": "Parapet",
+      "position": [
+        2.26,
+        10.8,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Parapet.005",
+      "type": "Parapet",
+      "position": [
+        -3.39,
+        10.8,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Parapet.006",
+      "type": "Parapet",
+      "position": [
+        2.26,
+        10.8,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Parapet.007",
+      "type": "Parapet",
+      "position": [
+        3.39,
+        10.8,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Parapet2",
+      "type": "Parapet2",
+      "position": [
+        -3.39,
+        10.8,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Parapet2.001",
+      "type": "Parapet2",
+      "position": [
+        0.0,
+        10.8,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "Parapet2.002",
+      "type": "Parapet2",
+      "position": [
+        3.39,
+        10.8,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Platform rail",
+      "type": "Rail",
+      "position": [
+        -1.13,
+        10.8,
+        -4.52
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "Platform rail.001",
+      "type": "Rail",
+      "position": [
+        1.13,
+        10.8,
+        -4.52
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "StoneFloor",
+      "type": "StoneFloor",
+      "position": [
+        2.26,
+        10.738,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "StoneWall",
+      "type": "StoneWall",
+      "position": [
+        -2.26,
+        0.0,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "StoneWall.001",
+      "type": "StoneWall",
+      "position": [
+        -3.39,
+        0.0,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "StoneWall.002",
+      "type": "StoneWall",
+      "position": [
+        -2.26,
+        0.0,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "StoneWall.003",
+      "type": "StoneWall",
+      "position": [
+        3.39,
+        0.0,
+        -2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "StoneWall.004",
+      "type": "StoneWall",
+      "position": [
+        0.0,
+        0.0,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "StoneWall.005",
+      "type": "StoneWall",
+      "position": [
+        -3.39,
+        0.0,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "StoneWall.006",
+      "type": "StoneWall",
+      "position": [
+        0.0,
+        0.0,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "StoneWall.007",
+      "type": "StoneWall",
+      "position": [
+        3.39,
+        0.0,
+        0.0
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "StoneWall.008",
+      "type": "StoneWall",
+      "position": [
+        2.26,
+        0.0,
+        -3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "StoneWall.009",
+      "type": "StoneWall",
+      "position": [
+        -3.39,
+        0.0,
+        2.26
+      ],
+      "yaw": 0.0
+    },
+    {
+      "name": "StoneWall.010",
+      "type": "StoneWall",
+      "position": [
+        2.26,
+        0.0,
+        3.39
+      ],
+      "yaw": 270.0
+    },
+    {
+      "name": "StoneWall.011",
+      "type": "StoneWall",
+      "position": [
+        3.39,
+        0.0,
+        2.26
+      ],
+      "yaw": 0.0
+    }
+  ]
+}
