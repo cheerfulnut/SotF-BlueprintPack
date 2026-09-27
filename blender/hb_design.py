@@ -28,6 +28,12 @@ class Design:
         self.meshes = {part: hb_parts.build_mesh(part) for part in hb_parts.PARTS}
         self._add_kit()
 
+    def group(self, name):
+        """A sub-collection of the design, e.g. one per storey, so each can be hidden with its eye icon."""
+        collection = bpy.data.collections.new(name)
+        self.design.children.link(collection)
+        return collection
+
     def add(self, part, x, y, z=0.0, yaw_deg=0.0, name=None, collection=None):
         obj = bpy.data.objects.new(name or part, self.meshes[part])
         obj.location = (x, y, z)
@@ -83,5 +89,5 @@ class Design:
                         r3d.view_distance = view_distance
 
         bpy.ops.wm.save_as_mainfile(filepath=path)
-        parts = sum(1 for o in self.design.objects if o.get("hb_part"))
+        parts = sum(1 for o in self.design.all_objects if o.get("hb_part"))
         print(f"HB: wrote {path} with {parts} design parts")
