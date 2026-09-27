@@ -9,6 +9,9 @@ public class HouseBlueprintMod : SonsMod
     // Set to true to write Mods\HouseBlueprint\diagnostics.txt (the game's recipes, book pages and building pieces).
     private static readonly bool RunDiagnostics = false;
 
+    // Set to true to save a few blueprint book page images to Mods\HouseBlueprint\page-export (local reference only).
+    private static readonly bool ExportPages = true;
+
     public HouseBlueprintMod()
     {
         HarmonyPatchAll = true;
@@ -30,5 +33,8 @@ public class HouseBlueprintMod : SonsMod
 
         if (RunDiagnostics)
             Diagnostics.Run(DataPath);
+
+        if (ExportPages)
+            PageExport.Run(DataPath);
     }
 }
