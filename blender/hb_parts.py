@@ -37,7 +37,9 @@ PARTS = {
     "HatchFloor": ("Floor with a hole and a climbing rope hanging down through it; origin as Floor",
                    {"Plank": 5, "Rope": 1}),
     "Parapet": ("Log railing, 3 logs high; origin on the ground like the walls", {"Log": 3}),
-    "Rope": ("Climbing rope; origin at its top, it hangs down to the ground", {"Rope": 1}),
+    "Rope": ("Climbing rope; origin at its top, it hangs down to the ground. It has a front: you climb facing the "
+             "part's local -Y and step off that way at the top, so turn it to face what you climb onto",
+             {"Rope": 1}),
     "Parapet2": ("Log railing, 2 logs high (the low part of a crenellated parapet)", {"Log": 2}),
     "Rail": ("Log railing, 1 log high", {"Log": 1}),
     "Balcony": ("Platform sticking out 2.26 m from a wall, on 2 beams with 2 braces underneath (from the game's "

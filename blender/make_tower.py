@@ -103,7 +103,10 @@ walls("Parapet", contact, top, skip=("x", -1, middle), middle_part="Parapet2" if
 d.add("Balcony", middle, -half, deck, 90.0, name="Launch platform", collection=top)
 for side in (-1, 1):
     d.add("Rail", middle + side * M, -half - M, contact, 0.0, name="Platform rail", collection=top)
-d.add("Rope", middle, -half - 2 * M - 0.15, deck, 0.0, name="Entrance rope", collection=top)
+# The climbing rope has a front: you climb it facing its local -Y and step off that way at the top. Turned 180
+# degrees it faces the tower; the rope itself hangs about 0.1 m towards its front from its top point, so the top point
+# sits 0.25 m out and the rope hangs just past the platform's edge.
+d.add("Rope", middle, -half - 2 * M - 0.25, deck, 180.0, name="Entrance rope", collection=top)
 
 if CORNER_POSTS:
     posts = d.group("Corner posts")
