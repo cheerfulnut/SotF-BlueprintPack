@@ -9,3 +9,6 @@ page-export/
 build/
 *.blend1
 __pycache__/
+GamePath.user.props
+dist/
+out/

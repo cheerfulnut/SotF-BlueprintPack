@@ -1,7 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <!-- A Sons of the Forest mod for RedLoader. Builds against the loader and the game code that RedLoader generated
          in the game folder; none of those files are copied into the output or committed to this repository.
-         Building does not touch the game folder. Pass -p:GamePath="<Sons Of The Forest folder>" if yours differs. -->
+         Building does not touch the game folder. The game folder defaults to Steam's standard location; if yours is
+         elsewhere, pass -p:GamePath="<Sons Of The Forest folder>" or put it in GamePath.user.props (not committed):
+           <Project><PropertyGroup><GamePath>D:\Games\Steam\steamapps\common\Sons Of The Forest</GamePath></PropertyGroup></Project> -->
+    <Import Project="GamePath.user.props" Condition="Exists('GamePath.user.props')" />
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
         <AssemblyName>HouseBlueprint</AssemblyName>
@@ -12,6 +15,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <DebugType>embedded</DebugType>
         <Deterministic>true</Deterministic>
+        <!-- Record source paths as /_/ in the DLL's embedded debug information instead of this PC's folders. -->
+        <PathMap>$(MSBuildProjectDirectory)=/_/</PathMap>
         <GamePath Condition="'$(GamePath)' == ''">C:\Program Files (x86)\Steam\steamapps\common\Sons Of The Forest</GamePath>
         <LoaderDir>$(GamePath)\_Redloader\net10</LoaderDir>
         <GameCodeDir>$(GamePath)\_Redloader\Game</GameCodeDir>
@@ -29,9 +34,33 @@
     </ItemGroup>
 
     <ItemGroup>
+        <!-- Research tools have their own projects. -->
+        <Compile Remove="tools\**" />
+        <None Remove="tools\**" />
+    </ItemGroup>
+
+    <ItemGroup>
         <!-- RedLoader reads Mods\<AssemblyName>\manifest.json next to Mods\<AssemblyName>.dll. -->
         <None Include="manifest.json" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
+
+    <!-- dotnet build -c Release -t:Package: a zip laid out like the game folder (Mods\...), in dist\. -->
+    <Target Name="Package" DependsOnTargets="Build">
+        <PropertyGroup>
+            <StageDir>$(MSBuildProjectDirectory)\dist\stage</StageDir>
+            <ZipFile>$(MSBuildProjectDirectory)\dist\HouseBlueprint-$(Version).zip</ZipFile>
+        </PropertyGroup>
+        <ItemGroup>
+            <BlueprintFiles Include="Blueprints\*.json;Blueprints\*.png" />
+        </ItemGroup>
+        <RemoveDir Directories="$(StageDir)" />
+        <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(StageDir)\Mods" />
+        <Copy SourceFiles="manifest.json" DestinationFolder="$(StageDir)\Mods\HouseBlueprint" />
+        <Copy SourceFiles="@(BlueprintFiles)" DestinationFolder="$(StageDir)\Mods\HouseBlueprint\Blueprints" />
+        <Delete Files="$(ZipFile)" />
+        <ZipDirectory SourceDirectory="$(StageDir)" DestinationFile="$(ZipFile)" />
+        <Message Importance="high" Text="Packaged $(ZipFile)" />
+    </Target>
 
     <Target Name="CheckGamePath" BeforeTargets="ResolveAssemblyReferences">
         <Error Condition="!Exists('$(LoaderDir)\RedLoader.dll') Or !Exists('$(GameCodeDir)\Sons.dll')"
