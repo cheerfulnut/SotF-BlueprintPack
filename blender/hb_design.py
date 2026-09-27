@@ -57,8 +57,10 @@ class Design:
         # One of each part in a column left of the design, with a label in front of it.
         for i, part in enumerate(hb_parts.PARTS):
             y = -6.0 + i * 3.5
-            z = 1.0 if part in ("Beam", "Floor", "HatchFloor") else (hb_parts.ROPE_LENGTH if part == "Rope" else 0.0)
-            self.add(part, hb_parts.KIT_X, y, z, 90.0 if part not in ("PlankPlatform", "Floor", "HatchFloor") else 0.0,
+            z = 1.0 if part in ("Beam", "Floor", "HatchFloor", "StoneFloor", "Balcony") else (
+                hb_parts.ROPE_LENGTH if part == "Rope" else 0.0)
+            flat = ("PlankPlatform", "Floor", "HatchFloor", "StoneFloor", "Balcony", "CornerPost")
+            self.add(part, hb_parts.KIT_X, y, z, 0.0 if part in flat else 90.0,
                      name="Kit " + part, collection=self.kit)
             self._label(part, hb_parts.KIT_X, y - 1.6)
 

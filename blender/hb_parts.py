@@ -38,6 +38,13 @@ PARTS = {
                    {"Plank": 5, "Rope": 1}),
     "Parapet": ("Log railing, 3 logs high; origin on the ground like the walls", {"Log": 3}),
     "Rope": ("Climbing rope; origin at its top, it hangs down to the ground", {"Rope": 1}),
+    "Parapet2": ("Log railing, 2 logs high (the low part of a crenellated parapet)", {"Log": 2}),
+    "Rail": ("Log railing, 1 log high", {"Log": 1}),
+    "Balcony": ("Platform sticking out 2.26 m from a wall, on 2 beams with 2 braces underneath (from the game's "
+                "LookOut Tower); origin on the wall line at the beams' centre height, sticks out along local -X",
+                {"Log": 2, "HalfLog": 2, "Plank": 5}),
+    "StoneFloor": ("Floor tile of 5 flat stones instead of planks; origin as Floor", {"Stone": 5}),
+    "CornerPost": ("Upright log post, 2.7 m tall; origin at its foot", {"Log": 1}),
 }
 
 # Vertical layout the game's LookOut Tower uses: each storey has a ring of beams, walls stand on the beams.
@@ -76,6 +83,15 @@ def _cylinder_y(bm, x, y, z, length, radius, segments=16):
     geom = bmesh.ops.create_cone(bm, cap_ends=True, segments=segments, radius1=radius, radius2=radius, depth=length)
     verts = geom["verts"]
     bmesh.ops.rotate(bm, verts=verts, cent=(0, 0, 0), matrix=_rot_x(math.pi / 2))
+    bmesh.ops.translate(bm, verts=verts, vec=(x, y, z))
+
+
+def _cylinder_x(bm, x, y, z, length, radius, tilt=0.0, segments=16):
+    """A log lying along X (optionally tilted up/down by tilt radians), centred at (x, y, z)."""
+    geom = bmesh.ops.create_cone(bm, cap_ends=True, segments=segments, radius1=radius, radius2=radius, depth=length)
+    verts = geom["verts"]
+    from mathutils import Matrix
+    bmesh.ops.rotate(bm, verts=verts, cent=(0, 0, 0), matrix=Matrix.Rotation(math.pi / 2 + tilt, 3, "Y"))
     bmesh.ops.translate(bm, verts=verts, vec=(x, y, z))
 
 
@@ -173,6 +189,30 @@ def build_mesh(part):
             return mesh
         return _finish(part, bm, "Plank")
 
+    if part in ("Parapet2", "Rail"):
+        for i in range(2 if part == "Parapet2" else 1):
+            _cylinder_y(bm, 0, 0, LOG_R + ROW * i, LOG_LEN, LOG_R)
+        return _finish(part, bm, "Log")
+
+    if part == "Balcony":
+        for side in (-1, 1):  # beams sticking out, and braces from the wall down under them
+            _cylinder_x(bm, -1.13, side * 1.13, 0, 2.26, LOG_R * 0.95)
+            _cylinder_x(bm, -0.5, side * 1.13, -0.55, 1.35, LOG_R * 0.8, tilt=-0.785)
+        for k in range(5):
+            _box(bm, -1.13, -0.905 + 0.4525 * k, BEAM_TO_FLOOR, 2.29, 0.428, 0.225)
+        return _finish(part, bm, "Plank")
+
+    if part == "StoneFloor":
+        for k in range(5):
+            _box(bm, -0.905 + 0.4525 * k, 0, 0, 0.428, 2.25, 0.225)
+        bmesh.ops.bevel(bm, geom=bm.edges[:], offset=0.04, segments=2, affect="EDGES")
+        return _finish(part, bm, "Stone")
+
+    if part == "CornerPost":
+        geom = bmesh.ops.create_cone(bm, cap_ends=True, segments=16, radius1=LOG_R, radius2=LOG_R, depth=2.7)
+        bmesh.ops.translate(bm, verts=geom["verts"], vec=(0, 0, 1.35))
+        return _finish(part, bm, "Log")
+
     if part == "Parapet":
         for i in range(3):
             _cylinder_y(bm, 0, 0, LOG_R + ROW * i, LOG_LEN, LOG_R)
@@ -189,8 +229,8 @@ def build_mesh(part):
 def icon_mesh(item):
     """Small stand-in meshes for the ingredient icons on the book page."""
     bm = bmesh.new()
-    if item in ("Log", "QuarterLog"):
-        _cylinder_y(bm, 0, 0, 0, LOG_LEN if item == "Log" else LOG_LEN / 4, LOG_R)
+    if item in ("Log", "QuarterLog", "HalfLog"):
+        _cylinder_y(bm, 0, 0, 0, {"Log": LOG_LEN, "HalfLog": LOG_LEN / 2, "QuarterLog": LOG_LEN / 4}[item], LOG_R)
         return _finish("Icon" + item, bm, "Log")
     if item == "Plank":
         _box(bm, 0, 0, 0, 0.428, 2.3, 0.12)
