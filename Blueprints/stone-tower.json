@@ -4,7 +4,7 @@
   "category": "Shelters",
   "page": "stone-tower-page.png",
   "ingredients": {
-    "Log": 276,
+    "Log": 275,
     "Rope": 2,
     "Plank": 91,
     "HalfLog": 2,
@@ -586,16 +586,6 @@
       "name": "Beam.057",
       "type": "Beam",
       "position": [
-        -2.26,
-        10.575,
-        1.13
-      ],
-      "yaw": 270.0
-    },
-    {
-      "name": "Beam.058",
-      "type": "Beam",
-      "position": [
         0.0,
         10.575,
         1.13
@@ -603,7 +593,7 @@
       "yaw": 270.0
     },
     {
-      "name": "Beam.059",
+      "name": "Beam.058",
       "type": "Beam",
       "position": [
         2.26,

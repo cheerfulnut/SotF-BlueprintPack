@@ -67,7 +67,7 @@ def walls(part, z, group, skip=None, middle_part=None, special_at=None):
                 d.add(use, sign * half, c, z, 0.0, collection=group)    # sides running along Y
 
 
-def beam_ring(z, group, with_floor_beams):
+def beam_ring(z, group, with_floor_beams, openings=()):
     for c in centres:
         for sign in (-1, 1):
             d.add("Beam", c, sign * half, z, 90.0, collection=group)
@@ -75,6 +75,10 @@ def beam_ring(z, group, with_floor_beams):
     if with_floor_beams:  # floor planks run along Y, so they rest on beams running along X
         for y in interior_lines:
             for c in centres:
+                # A beam with an opening on both sides holds nothing up and would block the way through.
+                tiles = {(round(x, 3), round(yy, 3)) for x, yy in openings}
+                if (round(c, 3), round(y - M, 3)) in tiles and (round(c, 3), round(y + M, 3)) in tiles:
+                    continue
                 d.add("Beam", c, y, z, 90.0, collection=group)
 
 
@@ -104,7 +108,7 @@ for i, part in enumerate(STOREYS):
     is_deck = i == len(STOREYS) - 1
     # The ring on top of a storey and any floor on it belong to the storey above.
     above = groups[i + 1] if i + 1 < len(groups) else top
-    beam_ring(beam, above, with_floor_beams=is_room_floor_below or is_deck)
+    beam_ring(beam, above, with_floor_beams=is_room_floor_below or is_deck, openings=RAMP_OPENING if is_deck else ())
     if is_room_floor_below:
         floor(beam, above, hatch_at=(centres[-1], centres[0]))  # front-right: rope down inside to the ground
     if is_room_floor_below:

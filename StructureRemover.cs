@@ -18,6 +18,8 @@ namespace HouseBlueprint;
 ///     It only ever reports first; nothing is removed without "confirm". Structures are removed top first through the
 ///     game's structure database (RuntimeStructureDatabase.DestroyStructure), not deleted directly. (The game's
 ///     StructureDestructionManager.DestroyStructureDebug reported success without removing anything.)
+///     Only building parts are removed (see BuildingParts); shelters and save points (tarps, beds), fires, storage,
+///     traps, defensive walls and the like are left alone and listed as skipped, even when they touch the building.
 ///     Unfinished blueprint ghosts are not structures; RedLoader's cancelblueprints removes those.
 /// </summary>
 internal static class StructureRemover
@@ -25,6 +27,17 @@ internal static class StructureRemover
     private const float LookDistance = 30f;
     private const float TouchDistance = 0.35f;  // gap between two structures' pieces that still counts as touching
     private const float ConfirmSeconds = 30f;
+
+    // Structure types that make up buildings. A PresetStructure counts only when it is a climbing rope: presets are
+    // also the game's tarp shelters and sleep (save) points.
+    private static readonly HashSet<string> BuildingParts = new()
+    {
+        "WallStructure", "BeamStructure", "FloorStructure", "PilarStructure", "FakePilarStructure", "StrutStructure",
+        "RampStructure", "StairsStructure", "HalfStairsStructure", "CornerRampStructure", "CornerRampBeamStructure",
+        "SingleStepStructure", "LadderStructure", "ApexStructure", "OneSidedApexStructure", "WalkwayStructure",
+        "DoorStructure", "PresetStructure"
+    };
+    private const ushort ClimbRopeProfile = 190;
 
     private static List<Structure> _pending;
     private static float _pendingSince;
@@ -56,23 +69,43 @@ internal static class StructureRemover
         }
     }
 
-    private static void Preview(List<Structure> found, string where)
+    private static bool IsBuildingPart(Structure structure)
     {
+        var type = structure.GetIl2CppType().Name;
+        if (!BuildingParts.Contains(type))
+            return false;
+        if (type != "PresetStructure")
+            return true;
+        var elements = structure.GetComponentsInChildren<StructureElement>(true);
+        return elements.Length > 0 && elements.All(e => e._profile != null && e._profile._id == ClimbRopeProfile);
+    }
+
+    private static string Summary(IEnumerable<Structure> structures) =>
+        string.Join(", ", structures.GroupBy(s => s.GetIl2CppType().Name.Replace("Structure", ""))
+                                    .OrderByDescending(g => g.Count())
+                                    .Select(g => $"{g.Count()} {g.Key}"));
+
+    private static void Preview(List<Structure> all, string where)
+    {
+        var found = all?.Where(IsBuildingPart).ToList();
+        var skipped = all?.Where(s => !IsBuildingPart(s)).ToList() ?? new List<Structure>();
+        var skippedNote = skipped.Count == 0 ? "" : $" Leaving alone: {Summary(skipped)}.";
+        if (skipped.Count > 0)
+            RLog.Msg($"[HouseBlueprint] hb_remove skipped {skipped.Count} non-building structures {where}: {Summary(skipped)}");
+
         if (found == null || found.Count == 0)
         {
             _pending = null;
-            Report($"hb_remove: no finished structures {where}.");
+            Report($"hb_remove: no building parts {where}.{skippedNote}");
             return;
         }
 
         _pending = found;
         _pendingSince = Time.realtimeSinceStartup;
-        var summary = string.Join(", ", found.GroupBy(s => s.GetIl2CppType().Name.Replace("Structure", ""))
-                                             .OrderByDescending(g => g.Count())
-                                             .Select(g => $"{g.Count()} {g.Key}"));
+        var summary = Summary(found);
         RLog.Msg($"[HouseBlueprint] hb_remove found {found.Count} structures {where}: {summary}");
-        Report($"hb_remove: {found.Count} structures {where} ({summary}). Type 'hb_remove confirm' within "
-               + $"{ConfirmSeconds:0} s to remove them.", 8f);
+        Report($"hb_remove: {found.Count} building parts {where} ({summary}).{skippedNote} Type 'hb_remove confirm' "
+               + $"within {ConfirmSeconds:0} s to remove them.", 10f);
     }
 
     private static void Confirm()
@@ -152,8 +185,11 @@ internal static class StructureRemover
         if (target == null)
             return null;
 
-        // Everything touching the target, then everything touching those, and so on.
-        var all = AllStructures();
+        // Everything touching the target, then everything touching those, and so on - spreading only through building
+        // parts, so a tarp or fire next to the building cannot link it to anything else.
+        if (!IsBuildingPart(target))
+            return new List<Structure> { target };
+        var all = AllStructures().Where(IsBuildingPart).ToList();
         var boxes = all.ToDictionary(st => st.Pointer, BoxOf);
         var building = new List<Structure> { target };
         var seen = new HashSet<IntPtr> { target.Pointer };
