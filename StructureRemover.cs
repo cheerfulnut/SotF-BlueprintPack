@@ -9,8 +9,9 @@ namespace HouseBlueprint;
 
 /// <summary>
 ///     The hb_remove console command (F1): removes a finished building, for clearing test builds.
-///       hb_remove            the building you are looking at: every structure the game counts as connected to the
-///                            piece you aim at, plus anything standing within that building's bounds (posts, ropes)
+///       hb_remove            the building you are looking at: the piece you aim at and every structure touching it,
+///                            and everything touching those, and so on (the game's own building grouping does not
+///                            join up the pieces of a tower finished from a blueprint)
 ///       hb_remove 15         every structure within 15 m of you
 ///       hb_remove confirm    remove what the last hb_remove found (within 30 seconds)
 ///       hb_remove cancel     forget it
@@ -21,11 +22,14 @@ namespace HouseBlueprint;
 internal static class StructureRemover
 {
     private const float LookDistance = 30f;
-    private const float BoundsMargin = 1f;
+    private const float TouchDistance = 0.35f;  // gap between two structures' pieces that still counts as touching
     private const float ConfirmSeconds = 30f;
 
     private static List<Structure> _pending;
     private static float _pendingSince;
+
+    // Removal takes a moment (pieces break or fall), so a scan soon after would find them again; skip those.
+    private static readonly HashSet<IntPtr> Removed = new();
 
     public static void Command(string args)
     {
@@ -96,8 +100,12 @@ internal static class StructureRemover
                 continue; // already gone with something else
             var name = $"HBRemove_{removed + failed}_{structure.GetInstanceID()}";
             structure.gameObject.name = name; // the game's debug destroy finds structures by name
+            var pointer = structure.Pointer;
             if (manager.DestroyStructureDebug(name))
+            {
                 removed++;
+                Removed.Add(pointer);
+            }
             else
                 failed++;
         }
@@ -113,7 +121,7 @@ internal static class StructureRemover
         foreach (var o in Object.FindObjectsOfType(Il2CppType.Of<Structure>()))
         {
             var s = o.TryCast<Structure>();
-            if (s != null && s.gameObject.activeInHierarchy)
+            if (s != null && s.gameObject.activeInHierarchy && !Removed.Contains(s.Pointer))
                 list.Add(s);
         }
 
@@ -148,30 +156,47 @@ internal static class StructureRemover
                 break;
         }
 
-        if (target == null)
+        if (target == null || Removed.Contains(target.Pointer))
             return null;
 
+        // Everything touching the target, then everything touching those, and so on.
         var all = AllStructures();
+        var boxes = all.ToDictionary(st => st.Pointer, BoxOf);
         var building = new List<Structure> { target };
-        var super = target.SuperStructure;
-        if (super != null)
-            building = all.Where(s => s.SuperStructure != null && s.SuperStructure.Pointer == super.Pointer).ToList();
-
-        // Add anything else standing within the building's bounds, such as posts or ropes the game keeps separate.
-        var min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-        var max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-        foreach (var element in building.SelectMany(s => s.GetComponentsInChildren<StructureElement>(true)))
+        var seen = new HashSet<IntPtr> { target.Pointer };
+        if (!boxes.ContainsKey(target.Pointer))
+            boxes[target.Pointer] = BoxOf(target);
+        for (var i = 0; i < building.Count; i++)
         {
-            min = Vector3.Min(min, element.transform.position);
-            max = Vector3.Max(max, element.transform.position);
+            var box = boxes[building[i].Pointer];
+            foreach (var other in all)
+            {
+                if (!seen.Contains(other.Pointer) && box.Intersects(boxes[other.Pointer]))
+                {
+                    seen.Add(other.Pointer);
+                    building.Add(other);
+                }
+            }
         }
 
-        var margin = new Vector3(BoundsMargin, BoundsMargin, BoundsMargin);
-        var bounds = new Bounds();
-        bounds.SetMinMax(min - margin, max + margin);
-        var inBuilding = new HashSet<IntPtr>(building.Select(s => s.Pointer));
-        building.AddRange(all.Where(s => !inBuilding.Contains(s.Pointer) && bounds.Contains(s.transform.position)));
         return building;
+    }
+
+    /// <summary>A box around a structure's pieces, grown by the touching distance.</summary>
+    private static Bounds BoxOf(Structure structure)
+    {
+        var box = new Bounds(structure.transform.position, Vector3.zero);
+        foreach (var element in structure.GetComponentsInChildren<StructureElement>(true))
+        {
+            var half = element._size * 0.5f;
+            for (var corner = 0; corner < 8; corner++)
+                box.Encapsulate(element.transform.TransformPoint(new Vector3((corner & 1) == 0 ? -half.x : half.x,
+                                                                             (corner & 2) == 0 ? -half.y : half.y,
+                                                                             (corner & 4) == 0 ? -half.z : half.z)));
+        }
+
+        box.Expand(TouchDistance * 2f);
+        return box;
     }
 
     private static void Report(string text, float seconds = 4f)

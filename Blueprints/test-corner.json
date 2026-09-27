@@ -5,8 +5,8 @@
   "page": "test-corner-page.png",
   "ingredients": {
     "Plank": 7,
-    "Log": 14,
-    "QuarterLog": 20,
+    "Log": 26,
+    "QuarterLog": 8,
     "Stone": 40
   },
   "parts": [

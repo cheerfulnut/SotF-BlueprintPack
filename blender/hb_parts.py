@@ -26,7 +26,8 @@ WALL_ROWS = 5
 PARTS = {
     # type: (description, ingredients as {item: count}) - the mod counts the real ingredients; these are for the page.
     "LogWall": ("Log wall, 5 logs high", {"Log": 5}),
-    "LogWindowWall": ("Log wall with a window, 5 logs high", {"QuarterLog": 5}),
+    "LogWindowWall": ("Log wall with a window in rows 3-4 (0.9 m high, 0.9 m up), 5 logs high",
+                      {"Log": 3, "QuarterLog": 2}),
     "StoneWall": ("Stone wall, 5 rows of 4 stones", {"Stone": 20}),
     "Door": ("Plank door, 1.1 m wide", {"Plank": 1}),
     "PlankPlatform": ("Plank floor on 4 log beams, about 2.3 m square", {"Log": 4, "Plank": 5}),
@@ -139,7 +140,7 @@ def build_mesh(part):
         seg = (LOG_LEN - gap) / 2
         for i in range(WALL_ROWS):
             z = LOG_R + ROW * i
-            if 1 <= i <= 3:
+            if i in (2, 3):
                 for side in (-1, 1):
                     _cylinder_y(bm, 0, side * (gap / 2 + seg / 2), z, seg, LOG_R)
             else:

@@ -4,11 +4,11 @@
   "category": "Shelters",
   "page": "stone-tower-page.png",
   "ingredients": {
-    "Log": 262,
+    "Log": 274,
     "Rope": 3,
     "Plank": 90,
     "HalfLog": 2,
-    "QuarterLog": 20,
+    "QuarterLog": 8,
     "Stone": 245
   },
   "parts": [

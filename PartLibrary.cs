@@ -17,7 +17,7 @@ internal static class PartLibrary
 {
     private const int MediumCabin = 30, SmallCabin = 34, LookOutTower = 38, SmallPlatform = 98;
     private const ushort LogProfile = 5, LogWindowProfile = 4, LogPilarProfile = 2, ClimbRopeProfile = 190;
-    private const int LogItem = 78, StoneItem = 640;
+    private const int LogItem = 78, StoneItem = 640, QuarterLogItem = 406;
 
     // A wall's pivot is the centre of its bottom log, half a log above where it stands.
     private static readonly Vector3 WallPivot = new(0f, 0.225f, 0f);
@@ -43,7 +43,12 @@ internal static class PartLibrary
             case "LogWall":
                 return PlaceSingle(FindWall(db, SmallCabin, LogProfile), ghostRoot, position + r * WallPivot, r) != null;
             case "LogWindowWall":
-                return PlaceSingle(FindWall(db, SmallCabin, LogWindowProfile), ghostRoot, position + r * WallPivot, r) != null;
+            {
+                // The Small Cabin's window-log wall is cut through all five rows (a doorway): use full logs with only
+                // rows 3 and 4 (counting from the bottom) cut, a window about 0.9 m high starting 0.9 m up.
+                var wall = PlaceSingle(FindWall(db, SmallCabin, LogProfile), ghostRoot, position + r * WallPivot, r);
+                return wall != null && SwapRows(wall, new[] { 2, 3 }, LogWindowProfile, QuarterLogItem);
+            }
             case "StoneWall":
             {
                 var wall = PlaceSingle(FindWall(db, SmallCabin, LogProfile), ghostRoot, position + r * WallPivot, r);
@@ -220,6 +225,24 @@ internal static class PartLibrary
         foreach (var extra in elements.Skip(count))
             Object.DestroyImmediate(extra.gameObject);
         return elements.Count >= count;
+    }
+
+    /// <summary>Swaps the given rows (0 = bottom) of a copied wall for pieces of another profile.</summary>
+    private static bool SwapRows(Transform wall, int[] rows, ushort profile, int itemId)
+    {
+        if (!ProfilesExist(new[] { profile }))
+            return false;
+
+        var elements = wall.GetComponentsInChildren<StructureElement>(true).OrderBy(e => e.transform.localPosition.y).ToList();
+        foreach (var row in rows.Where(r => r < elements.Count))
+        {
+            var t = elements[row].transform;
+            var (position, rotation, requiresPrevious) = (t.localPosition, t.localRotation, RequiresPrevious(elements[row]));
+            Object.DestroyImmediate(elements[row].gameObject);
+            AddElement(wall, profile, position, rotation, itemId, requiresPrevious);
+        }
+
+        return true;
     }
 
     /// <summary>No game blueprint has a stone wall: each log of a copied log wall becomes four stone wall pieces.</summary>
