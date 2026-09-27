@@ -31,7 +31,11 @@ hi = Vector((max(c.x for c in corners), max(c.y for c in corners), max(c.z for c
 centre, radius = (lo + hi) / 2, (hi - lo).length / 2
 
 if cut is not None:
-    near_x, near_y = lo.x + 0.6, lo.y + 0.6  # the camera looks from the -x, -y side
+    # The camera looks from the -x, -y side; the near sides are found from the walls only, since platforms and posts
+    # stick out further.
+    walls = [o.matrix_world.translation for o in parts if "Wall" in o["hb_part"] or "Parapet" in o["hb_part"]]
+    near_x = min(p.x for p in walls) + 0.6
+    near_y = min(p.y for p in walls) + 0.6
     for o in parts:
         p = o.matrix_world.translation
         if p.z > cut and (p.x < near_x or p.y < near_y) and o["hb_part"] not in ("Floor", "HatchFloor"):

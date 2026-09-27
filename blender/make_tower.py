@@ -5,9 +5,10 @@
 The tower (agreed with the user, 2026-09-27): 3 x 3 wall sections (about 6.8 m square); a stone ground storey with no
 door; two plain log storeys; an enclosed log room on the fourth storey with a window in the middle of each side; an
 open deck on top with a crenellated parapet (3 logs at the corners, 2 in the middle of each side) and a stone patch
-for the campfire; upright log posts at the four corners. At the front, a launch platform (for hang gliding) sticks
+for the campfire; upright log posts at the four corners from the room storey up (not lower, so they don't look climbable). At the front, a launch platform (for hang gliding) sticks
 out through a gap in the parapet, with a one-log rail on each side; the entrance rope hangs from its front edge down
-to the ground, and a second rope drops from a hatch in the deck into the room. Storeys 1-3 are the tower's body and have no floors. Heights follow the game's LookOut Tower:
+to the ground; a rope drops from a hatch in the deck into the room, and another from a hatch in the room's floor to
+the ground inside the tower (for going down inside to work on defences). Storeys 1-3 are the tower's body and have no floors. Heights follow the game's LookOut Tower:
 a ring of beams every 2.7 m with the walls standing on the beams.
 """
 import os
@@ -29,7 +30,8 @@ STOREYS = ["StoneWall", "LogWall", "LogWall", "LogWall"]  # bottom to top; the l
 ROOM_STOREY = 3                                  # index in STOREYS that gets a floor (the room)
 ROOM_WINDOWS = True                              # a window wall in the middle of each side of the room
 CRENELLATED = True                               # parapet alternates 3 and 2 logs high
-CORNER_POSTS = True                              # upright log posts just outside each corner, ground to above parapet
+CORNER_POSTS = True                              # upright log posts just outside each corner, above the parapet
+POSTS_FROM_STOREY = 3                            # posts start at this storey (0 = ground); lower ones look climbable
 POST_OFFSET = 0.45                               # posts touch both walls' outer faces at each corner
 LEVEL_NAMES = ["Level 1 - Stone", "Level 2 - Logs", "Level 3 - Logs", "Level 4 - Room"]
 WALL_HEIGHT = 5 * hb_parts.ROW                   # five logs (or rows of stone)
@@ -88,7 +90,7 @@ for i, part in enumerate(STOREYS):
     above = groups[i + 1] if i + 1 < len(groups) else top
     beam_ring(beam, above, with_floor_beams=is_room_floor_below or is_deck)
     if is_room_floor_below:
-        floor(beam, above)
+        floor(beam, above, hatch_at=(centres[-1], centres[0]))  # front-right: rope down inside to the ground
     if is_deck:
         floor(beam, above, hatch_at=(centres[0], centres[0]), stone_at=(centres[-1], centres[-1]))
         deck = beam
@@ -108,7 +110,7 @@ if CORNER_POSTS:
     post_top = contact + 3 * hb_parts.ROW
     for sx in (-1, 1):
         for sy in (-1, 1):
-            z = 0.0
+            z = 2.7 * POSTS_FROM_STOREY
             while z < post_top:
                 d.add("CornerPost", sx * (half + POST_OFFSET), sy * (half + POST_OFFSET), z, 0.0, collection=posts)
                 z += 2.7
