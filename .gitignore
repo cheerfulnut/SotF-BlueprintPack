@@ -7,3 +7,5 @@ obj/
 save-backups/
 page-export/
 build/
+*.blend1
+__pycache__/
