@@ -49,7 +49,13 @@ PARTS = {
                 {"Log": 2, "HalfLog": 2, "Plank": 5}),
     "StoneFloor": ("Floor tile of 5 flat stones instead of planks; origin as Floor", {"Stone": 5}),
     "CornerPost": ("Upright log post, 2.7 m tall; origin at its foot", {"Log": 1}),
+    "Ramp": ("Walkable ramp of 12 planks, 2.29 m wide, rising 2.54 m over 4.25 m along local +X at the game's roof "
+             "angle (30.85 degrees); origin at the centre of its lowest plank", {"Plank": 12}),
 }
+
+RAMP_ANGLE = 30.852  # degrees; the game's roofs. Two floor tiles (4.52 m) of run rise one storey (2.70 m)
+RAMP_PLANKS = 12
+RAMP_SPACING = 0.45  # along the slope
 
 # Vertical layout the game's LookOut Tower uses: each storey has a ring of beams, walls stand on the beams.
 STOREY = 2.70           # beam ring to beam ring
@@ -110,6 +116,11 @@ def _box(bm, x, y, z, sx, sy, sz):
 def _rot_x(a):
     from mathutils import Matrix
     return Matrix.Rotation(a, 3, "X")
+
+
+def _rot_y(a):
+    from mathutils import Matrix
+    return Matrix.Rotation(a, 3, "Y")
 
 
 def _rot_z(a):
@@ -218,6 +229,14 @@ def build_mesh(part):
         geom = bmesh.ops.create_cone(bm, cap_ends=True, segments=16, radius1=LOG_R, radius2=LOG_R, depth=2.7)
         bmesh.ops.translate(bm, verts=geom["verts"], vec=(0, 0, 1.35))
         return _finish(part, bm, "Log")
+
+    if part == "Ramp":
+        a = math.radians(RAMP_ANGLE)
+        for k in range(RAMP_PLANKS):
+            d = k * RAMP_SPACING
+            verts = _box(bm, d * math.cos(a), 0, d * math.sin(a), 0.428, 2.29, 0.225)
+            bmesh.ops.rotate(bm, verts=verts, cent=(d * math.cos(a), 0, d * math.sin(a)), matrix=_rot_y(-a))
+        return _finish(part, bm, "Plank")
 
     if part == "Parapet":
         for i in range(3):

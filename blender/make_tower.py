@@ -7,10 +7,12 @@ door; two plain log storeys; an enclosed log room on the fourth storey with a wi
 open deck on top with a crenellated parapet (3 logs at the corners, 2 in the middle of each side) and a stone patch
 for the campfire; upright log posts at the four corners from the room storey up (not lower, so they don't look climbable). At the front, a launch platform (for hang gliding) sticks
 out through a gap in the parapet, with a one-log rail on each side; the entrance rope hangs from its front edge down
-to the ground; a rope drops from a hatch in the deck into the room, and another from a hatch in the room's floor to
-the ground inside the tower (for going down inside to work on defences). Storeys 1-3 are the tower's body and have no floors. Heights follow the game's LookOut Tower:
+to the ground. A ramp along the back wall of the room rises to the deck through an opening with a rail along it, and a
+rope drops from a hatch in the room's floor to the ground inside the tower (for going down inside to work on defences).
+The back window sits in the right-hand section so the ramp does not cross it. Storeys 1-3 are the tower's body and have no floors. Heights follow the game's LookOut Tower:
 a ring of beams every 2.7 m with the walls standing on the beams.
 """
+import math
 import os
 import sys
 
@@ -44,13 +46,18 @@ interior_lines = [-half + 2 * M * j for j in range(1, SECTIONS)]
 d = hb_design.Design("Stone Tower")
 middle = centres[SECTIONS // 2]
 
+# The ramp runs along the back row of tiles on the left and middle, rising towards +X; the deck is open above it.
+RAMP_OPENING = [(centres[0], centres[-1]), (middle, centres[-1])]
 
-def walls(part, z, group, skip=None, middle_part=None, front_special_at=None):
-    """A storey of walls. middle_part replaces the middle section of each side; on the front (the side at -Y), it goes
-    at front_special_at instead when given (the launch platform's braces come down on the front's middle section)."""
+
+def walls(part, z, group, skip=None, middle_part=None, front_special_at=None, back_special_at=None):
+    """A storey of walls. middle_part replaces the middle section of each side; on the front (the side at -Y) and the
+    back (+Y) it goes at front_special_at / back_special_at instead when given (the launch platform's braces come down
+    on the front's middle section; the ramp runs along the back's left and middle sections)."""
     for c in centres:
         for sign in (-1, 1):
-            special = front_special_at if (sign == -1 and front_special_at is not None) else middle
+            special = {-1: front_special_at, 1: back_special_at}[sign]
+            special = middle if special is None else special
             use = middle_part if middle_part and c == special else part
             if skip != ("x", sign, c):
                 d.add(use, c, sign * half, z, 90.0, collection=group)   # sides running along X
@@ -70,9 +77,11 @@ def beam_ring(z, group, with_floor_beams):
                 d.add("Beam", c, y, z, 90.0, collection=group)
 
 
-def floor(z, group, hatch_at=None, stone_at=None):
+def floor(z, group, hatch_at=None, stone_at=None, openings=()):
     for cx in centres:
         for cy in centres:
+            if (cx, cy) in openings:
+                continue
             part = "HatchFloor" if (cx, cy) == hatch_at else "StoneFloor" if (cx, cy) == stone_at else "Floor"
             # A hatch's hole and rope are on its local +X side, and you step off the rope that way at the top: turn
             # it so that side faces the middle of the tower, not the outer wall (there is no floor to step onto there).
@@ -85,7 +94,8 @@ groups = [d.group(name) for name in LEVEL_NAMES]
 top = d.group("Level 5 - Deck and parapet")
 for i, part in enumerate(STOREYS):
     windows = "LogWindowWall" if i == ROOM_STOREY and ROOM_WINDOWS else None
-    walls(part, contact, groups[i], middle_part=windows, front_special_at=centres[0] if windows else None)
+    walls(part, contact, groups[i], middle_part=windows, front_special_at=centres[0] if windows else None,
+          back_special_at=centres[-1] if windows else None)
     beam = contact + WALL_HEIGHT + hb_parts.LOG_R   # the next ring sits on top of these walls
     is_room_floor_below = i + 1 == ROOM_STOREY
     is_deck = i == len(STOREYS) - 1
@@ -94,10 +104,22 @@ for i, part in enumerate(STOREYS):
     beam_ring(beam, above, with_floor_beams=is_room_floor_below or is_deck)
     if is_room_floor_below:
         floor(beam, above, hatch_at=(centres[-1], centres[0]))  # front-right: rope down inside to the ground
+    if is_room_floor_below:
+        room_floor = beam
     if is_deck:
-        floor(beam, above, hatch_at=(centres[0], centres[0]), stone_at=(centres[-1], centres[-1]))
+        floor(beam, above, stone_at=(centres[-1], middle), openings=RAMP_OPENING)
         deck = beam
     contact = beam + hb_parts.BEAM_TO_WALL
+
+# The ramp: its lowest plank sits on the room floor, its top plank reaches the deck at the opening's right-hand edge.
+plank_half = 0.1125                                    # half a plank's thickness
+ramp_run = (hb_parts.RAMP_PLANKS - 1) * hb_parts.RAMP_SPACING * math.cos(math.radians(hb_parts.RAMP_ANGLE))
+ramp_top_x = middle + M - 0.1
+ramp_z = room_floor + hb_parts.BEAM_TO_FLOOR + 2 * plank_half
+d.add("Ramp", ramp_top_x - ramp_run, centres[-1], ramp_z, 0.0, name="Ramp", collection=groups[ROOM_STOREY])
+# A rail along the deck opening's open side, standing on the floor beams there.
+for cx, cy in RAMP_OPENING:
+    d.add("Rail", cx, cy - M, contact, 90.0, name="Opening rail", collection=top)
 
 # The parapet, with a gap in the middle of the front for the launch platform.
 walls("Parapet", contact, top, skip=("x", -1, middle), middle_part="Parapet2" if CRENELLATED else None)

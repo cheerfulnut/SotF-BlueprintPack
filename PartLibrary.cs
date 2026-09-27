@@ -26,6 +26,13 @@ internal static class PartLibrary
     private static readonly ushort[] StoneChunkProfiles = { 204, 230, 231, 232 };
     private const float StoneChunkSpacing = 0.62f;
 
+    // Ramps: the game's roofs slope at this angle, so two floor tiles of run rise exactly one storey (2.70 m).
+    private const float RampAngle = 30.852f;
+    private const int RampPlanks = 12;
+    private const float RampPlankSpacing = 0.45f;
+    private const ushort PlankProfile = 6;
+    private const int PlankItem = 395;
+
     // Flat stones the size of a plank (the game's RockFloor profiles), one stone each.
     private static readonly ushort[] StoneFloorProfiles = { 270, 271, 272, 273, 274 };
 
@@ -80,6 +87,13 @@ internal static class PartLibrary
                 return PlaceRelative(db, LookOutTower, BalconyStructures, null, ghostRoot, position, r);
             case "Rope":
                 return PlaceSingle(FindNamed(db, LookOutTower, "Preset2"), ghostRoot, position, r) != null;
+            case "Ramp":
+            {
+                // The Medium Cabin's roof ramp, rebuilt as 12 planks and tilted to the game's roof angle.
+                var ramp = PlaceSingle(FindNamed(db, MediumCabin, "Ramp1"), ghostRoot, position,
+                                       r * Quaternion.Euler(0f, 0f, RampAngle));
+                return ramp != null && RebuildRampPlanks(ramp);
+            }
             case "CornerPost":
             {
                 var post = PlaceSingle(FindNamed(db, MediumCabin, "Pilar6"), ghostRoot, position, r);
@@ -225,6 +239,21 @@ internal static class PartLibrary
         foreach (var extra in elements.Skip(count))
             Object.DestroyImmediate(extra.gameObject);
         return elements.Count >= count;
+    }
+
+    /// <summary>Replaces a copied ramp's planks with RampPlanks planks along its local +X, starting at its pivot.</summary>
+    private static bool RebuildRampPlanks(Transform ramp)
+    {
+        if (!ProfilesExist(new[] { PlankProfile }))
+            return false;
+
+        var old = ramp.GetComponentsInChildren<StructureElement>(true);
+        var requiresPrevious = old.Length > 0 && RequiresPrevious(old[0]);
+        foreach (var plank in old)
+            Object.DestroyImmediate(plank.gameObject);
+        for (var k = 0; k < RampPlanks; k++)
+            AddElement(ramp, PlankProfile, new Vector3(k * RampPlankSpacing, 0f, 0f), Quaternion.identity, PlankItem, requiresPrevious);
+        return true;
     }
 
     /// <summary>Swaps the given rows (0 = bottom) of a copied wall for pieces of another profile.</summary>
